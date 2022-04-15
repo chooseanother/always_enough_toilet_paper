@@ -8,7 +8,27 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <!--MENU-->
     <string name="menu_home">Home</string>
     <string name="menu_members">Members</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_settings">Settings</string>
+
+    <!--SETTINGS-->
+    <string name="settings_household_name">Household name</string>
+    <string name="settings_household_code">Household code</string>
+    <string name="settings_copy_button">Copy button</string>
+    <string name="settings_name">Name</string>
+    <string name="settings_phone">Phone</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_notification1">New item in shopping list</string>
+    <string name="settings_notification2">Item bought</string>
+    <string name="settings_leave_household">Leave household</string>
+    <string name="settings_delete_household">Delete household</string>
+    <!--dummy values-->
+    <string name="settings_dummy_phone">50132420</string>
+    <string name="settings_dummy_name">Maggie</string>
+    <string name="settings_household_dummy_code">8A510KNT420-MR2I871</string>
+    <string name="settings_household_dummy_name">Cool name</string>
+
 </resources>
