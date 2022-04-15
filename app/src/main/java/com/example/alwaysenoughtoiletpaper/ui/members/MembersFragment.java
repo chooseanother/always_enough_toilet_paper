@@ -50,7 +50,6 @@ public class MembersFragment extends Fragment {
 
         membersList.setAdapter(memberAdapter);
 
-
         return root;
     }
 
