@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,8 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentMembersBinding;
-
-import java.util.ArrayList;
+import com.example.alwaysenoughtoiletpaper.model.adapter.MemberAdapter;
 
 public class MembersFragment extends Fragment {
     private MemberAdapter memberAdapter;

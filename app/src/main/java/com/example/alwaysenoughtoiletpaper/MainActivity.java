@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.alwaysenoughtoiletpaper.databinding.ActivityMainBinding;
-import com.example.alwaysenoughtoiletpaper.model.UserRepository;
+import com.example.alwaysenoughtoiletpaper.data.UserRepository;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.lifecycle.ViewModelProvider;

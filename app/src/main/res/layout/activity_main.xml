@@ -27,16 +27,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:orientation="vertical"
             android:clickable="true"
-            android:padding="16dp">
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/activity_vertical_margin">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_logout"
+                android:layout_marginEnd="@dimen/small_vertical_margin"/>
 
             <TextView
                 android:id="@+id/menu_log_out"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Log out" />
+                android:text="@string/menu_sign_out"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
     </com.google.android.material.navigation.NavigationView>
