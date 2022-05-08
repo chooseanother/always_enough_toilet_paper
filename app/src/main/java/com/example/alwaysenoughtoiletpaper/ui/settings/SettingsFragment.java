@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentSettingsBinding;
-import com.example.alwaysenoughtoiletpaper.databinding.FragmentSlideshowBinding;
 
 public class SettingsFragment extends Fragment {
 

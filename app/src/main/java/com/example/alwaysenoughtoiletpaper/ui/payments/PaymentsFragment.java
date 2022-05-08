@@ -1,4 +1,4 @@
-package com.example.alwaysenoughtoiletpaper.ui.slideshow;
+package com.example.alwaysenoughtoiletpaper.ui.payments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,20 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.example.alwaysenoughtoiletpaper.databinding.FragmentSlideshowBinding;
+import com.example.alwaysenoughtoiletpaper.databinding.FragmentPaymentsBinding;
 
-public class SlideshowFragment extends Fragment {
+public class PaymentsFragment extends Fragment {
 
-    private FragmentSlideshowBinding binding;
+    private FragmentPaymentsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        SlideshowViewModel slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
+        PaymentsViewModel paymentsViewModel =
+                new ViewModelProvider(this).get(PaymentsViewModel.class);
 
-        binding = FragmentSlideshowBinding.inflate(inflater, container, false);
+        binding = FragmentPaymentsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textSlideshow;
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
