@@ -28,4 +28,10 @@
         android:name="com.example.alwaysenoughtoiletpaper.ui.settings.SettingsFragment"
         android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/nav_test"
+        android:name="com.example.alwaysenoughtoiletpaper.ui.joincreate.JoinCreateHouseholdFragment"
+        android:label="Test"
+        tools:layout="@layout/fragment_join_create_household" />
 </navigation>
