@@ -44,4 +44,11 @@
     <string name="household_code_help_text">Each household has a unique code. The household creator can find it in Settings. </string>
     <string name="button_ok">OK</string>
 
+
+    <!--SHOPPING LIST-->
+    <string name="shopping_list_tab_shopping">Shopping</string>
+    <string name="shopping_list_tab_bought">Bought</string>
+    <string name="shopping_list_tab_history">History</string>
+    <string name="shopping_list_bought_enter_money">Enter money</string>
+
 </resources>
