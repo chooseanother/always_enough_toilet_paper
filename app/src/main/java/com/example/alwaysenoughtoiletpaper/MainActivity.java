@@ -2,13 +2,10 @@ package com.example.alwaysenoughtoiletpaper;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 
 import com.example.alwaysenoughtoiletpaper.databinding.ActivityMainBinding;
-import com.example.alwaysenoughtoiletpaper.model.UserRepository;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.alwaysenoughtoiletpaper.data.UserRepository;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.lifecycle.ViewModelProvider;

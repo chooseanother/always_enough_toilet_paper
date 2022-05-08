@@ -6,7 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.alwaysenoughtoiletpaper.model.UserRepository;
+import com.example.alwaysenoughtoiletpaper.data.UserRepository;
 import com.google.firebase.auth.FirebaseUser;
 
 public class SignInActivityViewModel extends AndroidViewModel {

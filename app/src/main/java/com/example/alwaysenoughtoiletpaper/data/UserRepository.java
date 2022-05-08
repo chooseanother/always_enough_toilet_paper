@@ -1,9 +1,10 @@
-package com.example.alwaysenoughtoiletpaper.model;
+package com.example.alwaysenoughtoiletpaper.data;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.alwaysenoughtoiletpaper.model.UserLiveData;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseUser;
 
