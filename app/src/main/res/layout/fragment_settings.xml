@@ -122,7 +122,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView6"/>
 
     <Switch
-        android:id="@+id/settings_notification1"
+        android:id="@+id/settings_new_item_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -141,7 +141,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <Switch
-        android:id="@+id/settings_notification2"
+        android:id="@+id/settings_item_bought_notification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
