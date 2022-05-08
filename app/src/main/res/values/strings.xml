@@ -13,6 +13,7 @@
     <string name="menu_members">Members</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="menu_settings">Settings</string>
+    <string name="menu_sign_out">Sign out</string>
 
     <!--SETTINGS-->
     <string name="settings_household_name">Household name</string>

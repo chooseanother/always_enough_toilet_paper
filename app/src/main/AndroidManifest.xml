@@ -11,9 +11,12 @@
         android:theme="@style/Theme.AlwaysEnoughToiletPaper">
         <activity
             android:name=".MainActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AlwaysEnoughToiletPaper.NoActionBar"/>
+        <activity
+            android:name=".SignInActivity"
             android:exported="true"
-            android:label="@string/title_activity_main"
-            android:theme="@style/Theme.AlwaysEnoughToiletPaper.NoActionBar" >
+            android:theme="@style/Theme.AlwaysEnoughToiletPaper.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
