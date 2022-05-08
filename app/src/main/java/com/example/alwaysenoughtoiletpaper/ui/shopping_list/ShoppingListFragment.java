@@ -21,8 +21,11 @@ public class ShoppingListFragment extends Fragment {
     private FragmentShoppingListBinding binding;
     private ShoppingListViewModel viewModel;
     private View root;
-    private TabLayout tabLayout;
+
     private ViewPager viewPager;
+    private TabLayout tabLayout;
+
+    private TabsPagerAdapter tabsPagerAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -30,17 +33,11 @@ public class ShoppingListFragment extends Fragment {
         binding = FragmentShoppingListBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
-        tabLayout = binding.tabLayoutShoppingList;
+        tabsPagerAdapter = new TabsPagerAdapter(getActivity().getSupportFragmentManager(), 3);
         viewPager = binding.shoppingListViewPager;
-
+        viewPager.setAdapter(tabsPagerAdapter);
+        tabLayout = binding.tabLayoutShoppingList;
         tabLayout.setupWithViewPager(viewPager);
-
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPagerAdapter.addFragment(new ListTabFragment(), "Shopping");
-        viewPagerAdapter.addFragment(new BoughtTabFragment(), "Bought");
-        viewPagerAdapter.addFragment(new HistoryTabFragment(), "History");
-
-        viewPager.setAdapter(viewPagerAdapter);
 
         return root;
     }
