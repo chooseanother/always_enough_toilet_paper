@@ -24,7 +24,7 @@ public class MembersViewModel extends ViewModel {
     private void PopulateMembers(){
         members = new MutableLiveData<>();
         List<Member> testMembers = new ArrayList<>();
-        testMembers.add(new Member("Kim Tranberg","+4512345678"));
+        testMembers.add(new Member("Kim Tranberg long long long long long long name","+4512345678"));
         testMembers.add(new Member("Markéta Lapčíková","+4587654321"));
         testMembers.add(new Member("Mongo Bongo","+4512341234"));
         testMembers.add(new Member("Steen Steensen Blicher","+4556785678"));
