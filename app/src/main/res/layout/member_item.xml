@@ -1,51 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/member_list_member"
     android:layout_width="match_parent"
-    android:layout_height="75dp"
-    android:layout_marginStart="15dp"
-    android:layout_marginEnd="15dp"
-    android:layout_marginTop="15dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/small_vertical_margin"
+    android:layout_marginTop="@dimen/small_vertical_margin"
+    android:layout_marginEnd="@dimen/small_vertical_margin"
     android:background="@drawable/list_item_background"
-    android:orientation="horizontal">
+    android:padding="@dimen/small_vertical_margin"
+    android:backgroundTint="@color/light_purple">
 
     <ImageView
         android:id="@+id/member_list_owner"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:layout_weight="2"
-        android:src="@drawable/ic_baseline_grade_24" />
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_members_star"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/member_list_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="7"
-        android:id="@+id/member_list_member">
-        <TextView
-            android:id="@+id/member_list_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="Member Name"
-            android:textSize="24sp" />
-        <TextView
-            android:id="@+id/member_list_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="+4512345678"
-            android:textSize="18sp" />
-    </LinearLayout>
+        android:layout_marginStart="@dimen/small_vertical_margin"
+        android:text="Member Name"
+        android:textSize="@dimen/text_size_medium"
+        app:layout_constraintBottom_toTopOf="@+id/member_list_phone"
+        app:layout_constraintStart_toEndOf="@+id/member_list_owner"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/member_list_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+4512345678"
+        android:layout_marginStart="@dimen/small_vertical_margin"
+        android:textSize="@dimen/text_size_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/member_list_owner"
+        app:layout_constraintTop_toBottomOf="@+id/member_list_name" />
+
 
     <ImageView
         android:id="@+id/member_list_delete"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_weight="2"
-        android:layout_margin="5dp"
-        android:src="@drawable/ic_baseline_delete_forever_24"
-        android:layout_gravity="center"/>
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_members_delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
