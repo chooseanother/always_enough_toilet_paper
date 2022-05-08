@@ -10,19 +10,19 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentShoppingListBinding;
+import com.google.android.material.tabs.TabLayout;
 
 public class ShoppingListFragment extends Fragment {
     private FragmentShoppingListBinding binding;
     private ShoppingListViewModel viewModel;
     private View root;
+    private TabLayout tabLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(ShoppingListViewModel.class);
         binding = FragmentShoppingListBinding.inflate(inflater, container, false);
         root = binding.getRoot();
-
-        greeting();
 
         return root;
     }
@@ -31,12 +31,5 @@ public class ShoppingListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-
-
-    private void greeting(){
-        String greeting = "Greetings, "+viewModel.getCurrentUser().getValue().getDisplayName();
-        binding.userText.setText(greeting);
     }
 }
