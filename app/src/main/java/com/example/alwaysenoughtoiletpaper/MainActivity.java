@@ -3,6 +3,8 @@ package com.example.alwaysenoughtoiletpaper;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.alwaysenoughtoiletpaper.databinding.ActivityMainBinding;
 import com.example.alwaysenoughtoiletpaper.model.UserRepository;
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkIfSignedIn(){
         viewModel.getCurrentUser().observe(this, user -> {
             if (user != null){
-                // hmm what do
+                setUpMenuUsername();
 
             } else {
                 startLoginActivity();
@@ -90,4 +92,13 @@ public class MainActivity extends AppCompatActivity {
         viewModel.signOut();
     }
 
+    private void setUpMenuUsername(){
+
+        TextView username = binding.navView.getHeaderView(0).findViewById(R.id.menu_user_name);
+        username.setText(viewModel.getCurrentUser().getValue().getDisplayName());
+        TextView email = binding.navView.getHeaderView(0).findViewById(R.id.menu_user_email);
+        email.setText(viewModel.getCurrentUser().getValue().getEmail());
+        ImageView image = binding.navView.getHeaderView(0).findViewById(R.id.menu_user_image);
+        image.setImageURI(viewModel.getCurrentUser().getValue().getPhotoUrl());
+    }
 }
