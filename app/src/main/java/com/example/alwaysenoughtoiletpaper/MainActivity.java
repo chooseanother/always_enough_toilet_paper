@@ -2,13 +2,10 @@ package com.example.alwaysenoughtoiletpaper;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 
 import com.example.alwaysenoughtoiletpaper.databinding.ActivityMainBinding;
 import com.example.alwaysenoughtoiletpaper.model.UserRepository;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -39,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_members, R.id.nav_slideshow, R.id.nav_settings)
+                R.id.nav_shopping_list, R.id.nav_members, R.id.nav_slideshow, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
