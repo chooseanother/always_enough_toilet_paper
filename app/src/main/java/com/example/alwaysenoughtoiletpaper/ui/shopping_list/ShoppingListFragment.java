@@ -102,12 +102,12 @@ public class ShoppingListFragment extends Fragment {
                     householdShoppingItemList.remove(index);
                     Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList);
                     viewModel.updateHousehold(household);
-                    viewModel.updateTicked(index);
+                    viewModel.deleteItem(item);
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
             } else {
-                viewModel.tickItem(index);
+                viewModel.tickItem(item);
             }
         }));
 

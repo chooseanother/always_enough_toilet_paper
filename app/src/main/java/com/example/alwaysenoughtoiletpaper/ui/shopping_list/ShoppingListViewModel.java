@@ -27,7 +27,7 @@ public class ShoppingListViewModel extends AndroidViewModel {
 
     private Application application;
     MutableLiveData<Integer> numberOfTicked;
-    ArrayList<Integer> tickedItems;
+    ArrayList<ShoppingItem> tickedItems;
 
     public ShoppingListViewModel(@NonNull Application application) {
         super(application);
@@ -66,21 +66,25 @@ public class ShoppingListViewModel extends AndroidViewModel {
         householdRepository.saveHousehold(household);
     }
 
-    public void tickItem(int index){
+    public void tickItem(ShoppingItem item){
         //ticked in
-        if(!tickedItems.contains(index)){
-            tickedItems.add(index);
+        if(!tickedItems.contains(item)){
+            tickedItems.add(item);
             numberOfTicked.setValue(tickedItems.size());
         }
         //ticked out
         else {
-            tickedItems.remove(index);
+            tickedItems.remove(item);
             numberOfTicked.setValue(tickedItems.size());
         }
     }
 
-    public void updateTicked(int index){
-
+    public void deleteItem(ShoppingItem item){
+        //if ticked, remove from ticked list
+        if(tickedItems.contains(item)){
+            tickedItems.remove(item);
+            numberOfTicked.setValue(tickedItems.size());
+        }
     }
 
     public MutableLiveData<Integer> getNumberOfTicked(){
