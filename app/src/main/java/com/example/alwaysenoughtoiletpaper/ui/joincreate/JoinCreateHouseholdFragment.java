@@ -141,6 +141,9 @@ public class JoinCreateHouseholdFragment extends Fragment {
                     String creator = household.getCreator();
                     List<HouseholdMember> members = household.getMembers();
                     members = members == null ? new ArrayList<>() : members;
+
+                    // make stupid check since when the user is added to the household
+                    // this observer is fired again
                     boolean skip = false;
                     for (HouseholdMember member : members){
                         if (member.getUid().equals(currentUserId)){
@@ -151,9 +154,6 @@ public class JoinCreateHouseholdFragment extends Fragment {
                     members.add(new HouseholdMember(currentUserId));
                     List<ShoppingItem> shoppinglist = household.getShoppinglist();
                     shoppinglist = shoppinglist == null ? new ArrayList<>() : shoppinglist;
-
-                    // make stupid check since when the user is added to the household
-                    // this observer is fired again
 
                     if (!skip) {
                         // save updated household info
