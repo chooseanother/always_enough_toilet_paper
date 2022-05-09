@@ -4,25 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout_shopping_list"
+
+    <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/shoppingListRV"
+        android:paddingBottom="@dimen/big_vertical_margin"/>
+
+    <Button
+        android:id="@+id/shopping_button_bought"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/shoppingListRV"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:text="@string/shopping_list_tab_bought"
+        android:backgroundTint="@color/light_purple"/>
 
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/shopping_list_view_pager"
-        android:layout_width="match_parent"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginBottom="@dimen/medium_vertical_margin"
+        android:layout_marginEnd="@dimen/medium_vertical_margin"
+        android:src="@drawable/ic_shopping_add"
+        android:id="@+id/shopping_list_fab"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.example.alwaysenoughtoiletpaper.ui.shopping_list.tabs;
+package com.example.alwaysenoughtoiletpaper.ui.history;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
