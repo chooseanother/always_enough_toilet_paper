@@ -3,6 +3,7 @@ package com.example.alwaysenoughtoiletpaper.model;
 public class ShoppingItem {
     private String name;
 
+
     public ShoppingItem() {
     }
 
@@ -17,4 +18,6 @@ public class ShoppingItem {
     public void setName(String name) {
         this.name = name;
     }
+
+
 }
