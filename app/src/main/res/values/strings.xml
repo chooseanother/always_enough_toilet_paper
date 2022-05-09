@@ -27,8 +27,10 @@
     <string name="settings_notification1">New item in shopping list</string>
     <string name="settings_notification2">Item bought</string>
     <string name="settings_leave_household">Leave household</string>
-    <string name="settings_delete_household">Delete household</string>
+    <string name="settings_leave_household_as_admin">Leave household as admin</string>
     <string name="changes_saved">Changes saved</string>
+    <string name="settings_leave_admin_household_dialogue">Are you sure you want to leave this household? This will make another random person in the household the administrator. </string>
+    <string name="settings_leave_household_dialogue">Are you sure you want to leave this household?</string>
     <!--dummy values-->
     <string name="settings_dummy_phone">50132420</string>
     <string name="settings_dummy_name">Maggie</string>

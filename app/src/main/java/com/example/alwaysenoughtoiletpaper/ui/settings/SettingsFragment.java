@@ -1,5 +1,6 @@
 package com.example.alwaysenoughtoiletpaper.ui.settings;
 
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.data.SharedPreferencesRepository;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentSettingsBinding;
+import com.example.alwaysenoughtoiletpaper.model.HouseholdAndUser;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 
@@ -113,35 +116,38 @@ public class SettingsFragment extends Fragment {
     }
 
     private void initHousehold(){
-        viewModel.getCurrentHousehold().observe(getViewLifecycleOwner(), household -> {
-            if (household != null) {
-                householdName = household.getName();
-                householdCreatorId = household.getCreator();
-                Log.d("delete_leave", "creator: "+householdCreatorId);
-                if(household.getMembers() == null){
-                    members = new ArrayList<>();
-                }
-                else{
-                    members = household.getMembers();
-                }
-                if(household.getShoppinglist() == null){
-                    shoppingList = new ArrayList<>();
-                }
-                else {
-                    shoppingList = household.getShoppinglist();
-                }
-                //set up values in the fragment
-                householdNameET = binding.settingsHouseholdName;
-                householdNameET.setText(householdName);
+        if(viewModel.getCurrentHousehold() == null){
+            Navigation.findNavController(root).navigate(R.id.nav_join_create);
+        }
+        else {
+            viewModel.getCurrentHousehold().observe(getViewLifecycleOwner(), household -> {
+                if (household != null) {
+                    householdName = household.getName();
+                    householdCreatorId = household.getCreator();
+                    if (household.getMembers() == null) {
+                        members = new ArrayList<>();
+                    } else {
+                        members = household.getMembers();
+                    }
+                    if (household.getShoppinglist() == null) {
+                        shoppingList = new ArrayList<>();
+                    } else {
+                        shoppingList = household.getShoppinglist();
+                    }
+                    //set up values in the fragment
+                    householdNameET = binding.settingsHouseholdName;
+                    householdNameET.setText(householdName);
 
-                setUpLeaveDeleteHousehold();
-            }
-        });
+                    setUpLeaveDeleteHousehold();
+                }
+            });
+        }
     }
 
     private void saveButton(){
         binding.settingsSaveButton.setOnClickListener(view -> {
-            viewModel.saveChanges(householdNameET.getText().toString(), householdCode, userNameET.getText().toString(), userPhoneET.getText().toString(), householdCreatorId, members, shoppingList);
+            HouseholdAndUser saveChanges = new HouseholdAndUser(userNameET.getText().toString(), userPhoneET.getText().toString(), householdCode, householdNameET.getText().toString(), householdCreatorId, members, shoppingList);
+            viewModel.saveChanges(saveChanges);
             Toast.makeText(getActivity().getApplicationContext(), R.string.changes_saved, Toast.LENGTH_SHORT).show();
         });
     }
@@ -149,21 +155,36 @@ public class SettingsFragment extends Fragment {
     private void setUpLeaveDeleteHousehold(){
         //currently logged-in user is the creator
         if(viewModel.getCurrentUser().getValue().getUid().equals(householdCreatorId)){
-            Log.d("delete_leave-creator", householdCreatorId);
-            Log.d("delete_leave-current", viewModel.getCurrentUser().getValue().getUid());
             //display Delete household
-            binding.settingsDeleteHousehold.setVisibility(View.VISIBLE);
-            binding.settingsDeleteHousehold.setEnabled(true);
+            binding.settingsLeaveHouseholdAsAdmin.setVisibility(View.VISIBLE);
+            binding.settingsLeaveHouseholdAsAdmin.setEnabled(true);
             binding.settingsLeaveHousehold.setVisibility(View.GONE);
         }
         else{
-
-            Log.d("delete_leave-creator", "else"+householdCreatorId);
-            Log.d("delete_leave-current", "else"+viewModel.getCurrentUser().getValue().getUid());
             //display Leave household
             binding.settingsLeaveHousehold.setVisibility(View.VISIBLE);
             binding.settingsLeaveHousehold.setEnabled(true);
-            binding.settingsDeleteHousehold.setVisibility(View.GONE);
+            binding.settingsLeaveHouseholdAsAdmin.setVisibility(View.GONE);
         }
+        binding.settingsLeaveHouseholdAsAdmin.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(getContext().getString(R.string.settings_leave_admin_household_dialogue)).setTitle(R.string.settings_leave_household_as_admin);
+            builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) ->  {
+                viewModel.leaveHouseholdAsAdmin(new HouseholdAndUser(viewModel.getCurrentUserId().getValue().getUid().toString(), userName, userPhone, householdCode, householdName, householdCreatorId, members, shoppingList));
+                Navigation.findNavController(root).navigate(R.id.nav_join_create);
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
+        binding.settingsLeaveHousehold.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(getContext().getString(R.string.settings_leave_household_dialogue)).setTitle(R.string.settings_leave_household);
+            builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) ->  {
+                viewModel.leaveHousehold(new HouseholdAndUser(viewModel.getCurrentUserId().getValue().getUid().toString(), userName, userPhone, householdCode, householdName, householdCreatorId, members, shoppingList));
+                Navigation.findNavController(root).navigate(R.id.nav_join_create);
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
     }
 }
