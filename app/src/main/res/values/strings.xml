@@ -12,6 +12,7 @@
     <string name="menu_join_create">Join/Create</string>
     <string name="menu_shopping_list">Shopping list</string>
     <string name="menu_members">Members</string>
+    <string name="menu_history">History</string>
     <string name="menu_payments">Payments</string>
     <string name="menu_settings">Settings</string>
     <string name="menu_sign_out">Sign out</string>
@@ -68,7 +69,16 @@
     <string name="payments_current_requests">Requests</string>
     <string name="payments_history_sent">Sent</string>
     <string name="payments_history_received">Received</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <!--HISTORY-->
+    <string name="history_delete_all_text">Are you sure you want to delete the whole history?</string>
+    <string name="history_delete_yes">Yes</string>
+    <string name="history_delete_sure">Are you sure?</string>
+    <string name="history_delete_yes_again">Yes, as I said.</string>
+    <string name="history_delete_really_sure">Are you really sure though? ( ͡° ͜ʖ ͡°)</string>
+    <string name="history_delete_yes_goddamn">YES GODDAMN!!</string>
+
+
 
 </resources>
