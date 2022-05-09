@@ -34,6 +34,7 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
     public void onBindViewHolder(@NonNull ShoppingItemAdapter.ViewHolder holder, int position) {
         ShoppingItem shoppingItem = shoppingItemList.get(position);
         holder.itemCheckBox.setText(shoppingItem.getName());
+        holder.itemCheckBox.setChecked(false);
     }
 
     public void setShoppingItemList(List<ShoppingItem> shoppingItemList) {
@@ -59,15 +60,15 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
             itemCheckBox = itemView.findViewById(R.id.shopping_list_item_checkbox);
             delete = itemView.findViewById(R.id.shopping_list_delete);
             itemCheckBox.setOnClickListener(view -> {
-                listener.OnClick(shoppingItemList.get(getBindingAdapterPosition()),false, getBindingAdapterPosition());
+                listener.OnClick(shoppingItemList.get(getBindingAdapterPosition()),false, getBindingAdapterPosition(), itemCheckBox.isChecked());
             });
             delete.setOnClickListener(view -> {
-                listener.OnClick(shoppingItemList.get(getBindingAdapterPosition()),true, getBindingAdapterPosition());
+                listener.OnClick(shoppingItemList.get(getBindingAdapterPosition()),true, getBindingAdapterPosition(), itemCheckBox.isChecked());
             });
         }
     }
 
     public interface OnClickListener {
-        void OnClick(ShoppingItem item, boolean delete, int index);
+        void OnClick(ShoppingItem item, boolean delete, int index, boolean isChecked);
     }
 }

@@ -2,6 +2,7 @@ package com.example.alwaysenoughtoiletpaper.ui.shopping_list;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +86,12 @@ public class ShoppingListFragment extends Fragment {
         binding = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        viewModel.clearTicked();
+    }
+
     private void setupRecyclerView() {
         shoppingList = binding.shoppingListRV;
         shoppingList.hasFixedSize();
@@ -93,16 +100,16 @@ public class ShoppingListFragment extends Fragment {
 
     private void setupAdapter() {
         shoppingItemAdapter = new ShoppingItemAdapter(new ArrayList<>());
-        shoppingItemAdapter.setOnClickListener(((item, delete, index) -> {
+        shoppingItemAdapter.setOnClickListener(((item, delete, index, isChecked) -> {
             if (delete) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getContext().getString(R.string.shopping_list_delete_item_text) + " " + item.getName() + "?").setTitle(R.string.shopping_list_delete_item_title);
                 builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) -> {
 
-                    householdShoppingItemList.remove(index);
+                    householdShoppingItemList.remove(item);
                     Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList);
                     viewModel.updateHousehold(household);
-                    viewModel.deleteItem(item);
+                    viewModel.clearTicked();
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -139,8 +146,16 @@ public class ShoppingListFragment extends Fragment {
         binding.shoppingButtonBought.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(getContext().getString(R.string.shopping_list_bought_dailogue));
-            builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) -> {
-//                viewModel.bought();
+            builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, item) -> {
+                List<ShoppingItem> tickItems = viewModel.getTickedItems();
+                List<ShoppingItem> historyList = new ArrayList<>();
+                for (ShoppingItem shoppingItem : tickItems) {
+                    historyList.add(shoppingItem);
+                    householdShoppingItemList.remove(shoppingItem);
+                }
+                Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList);
+                viewModel.updateHousehold(household);
+                viewModel.clearTicked();
             });
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -165,6 +180,12 @@ public class ShoppingListFragment extends Fragment {
 
                 // update shoppingItemAdapter::setShoppingItemList
                 shoppingItemAdapter.setShoppingItemList(householdShoppingItemList);
+
+                if(householdShoppingItemList == null){
+                    boughtButton.setVisibility(View.INVISIBLE);
+                } else {
+                    boughtButton.setVisibility(View.VISIBLE);
+                }
             });
         });
     }

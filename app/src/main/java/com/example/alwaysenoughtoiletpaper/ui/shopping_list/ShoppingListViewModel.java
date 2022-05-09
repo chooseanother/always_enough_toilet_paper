@@ -1,6 +1,7 @@
 package com.example.alwaysenoughtoiletpaper.ui.shopping_list;
 
 import android.app.Application;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,8 +27,8 @@ public class ShoppingListViewModel extends AndroidViewModel {
     private final HouseholdRepository householdRepository;
 
     private Application application;
-    MutableLiveData<Integer> numberOfTicked;
-    ArrayList<ShoppingItem> tickedItems;
+    private MutableLiveData<Integer> numberOfTicked;
+    private ArrayList<ShoppingItem> tickedItems;
 
     public ShoppingListViewModel(@NonNull Application application) {
         super(application);
@@ -79,16 +80,16 @@ public class ShoppingListViewModel extends AndroidViewModel {
         }
     }
 
-    public void deleteItem(ShoppingItem item){
-        //if ticked, remove from ticked list
-        if(tickedItems.contains(item)){
-            tickedItems.remove(item);
-            numberOfTicked.setValue(tickedItems.size());
-        }
+    public void clearTicked(){
+        tickedItems.clear();
+        numberOfTicked.setValue(tickedItems.size());
     }
 
     public MutableLiveData<Integer> getNumberOfTicked(){
         return numberOfTicked;
     }
 
+    public ArrayList<ShoppingItem> getTickedItems() {
+        return tickedItems;
+    }
 }
