@@ -17,4 +17,6 @@
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_big">36sp</dimen>
     <dimen name="edit_text_padding">4dp</dimen>
+
+    <dimen name="round_image_radius">20dp</dimen>
 </resources>
