@@ -61,7 +61,6 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
             itemCheckBox.setOnClickListener(view -> {
                 listener.OnClick(shoppingItemList.get(getBindingAdapterPosition()),false, getBindingAdapterPosition());
             });
-            // TODO set onclick listener for delete
             delete.setOnClickListener(view -> {
                 listener.OnClick(shoppingItemList.get(getBindingAdapterPosition()),true, getBindingAdapterPosition());
             });
