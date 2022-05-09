@@ -11,8 +11,12 @@ import com.example.alwaysenoughtoiletpaper.data.HouseholdRepository;
 import com.example.alwaysenoughtoiletpaper.data.UserInfoRepository;
 import com.example.alwaysenoughtoiletpaper.data.UserRepository;
 import com.example.alwaysenoughtoiletpaper.model.Household;
+import com.example.alwaysenoughtoiletpaper.model.Member;
+import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.UserInfo;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.List;
 
 public class JoinCreateHouseholdViewModel extends AndroidViewModel {
     private UserRepository userRepository;
@@ -55,7 +59,12 @@ public class JoinCreateHouseholdViewModel extends AndroidViewModel {
 //        return householdId != null && (!householdId.equals(""));
     }
 
-    public void createHouseHold(){
-        householdRepository.createHousehold();
+    public void createHouseHold(Household household){
+        householdRepository.createHousehold(household);
+    }
+
+    public void addHouseholdId(UserInfo userInfo){
+
+        userInfoRepository.addHouseholdId(userInfo);
     }
 }

@@ -33,7 +33,12 @@ public class UserInfoRepository {
     public UserInfoLiveData getUserInfo() {
         return userInfo;
     }
+
     public String getHouseholdId(){
         return userInfo.getValue().getHouseholdId();
+    }
+
+    public void addHouseholdId(UserInfo userInfo){
+        dbRef.setValue(userInfo);
     }
 }
