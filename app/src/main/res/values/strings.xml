@@ -9,6 +9,7 @@
     <string name="action_settings">Settings</string>
 
     <!--MENU-->
+    <string name="menu_join_create">Join/Create</string>
     <string name="menu_shopping_list">Shopping list</string>
     <string name="menu_members">Members</string>
     <string name="menu_payments">Payments</string>

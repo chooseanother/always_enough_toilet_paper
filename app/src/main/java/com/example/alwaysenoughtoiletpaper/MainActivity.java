@@ -6,12 +6,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.alwaysenoughtoiletpaper.databinding.ActivityMainBinding;
 import com.example.alwaysenoughtoiletpaper.data.UserRepository;
+import com.example.alwaysenoughtoiletpaper.model.UserInfo;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseUser;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -26,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
-    private UserRepository userRepository;
     private MainActivityViewModel viewModel;
 
     @Override
@@ -42,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_shopping_list, R.id.nav_members, R.id.nav_slideshow, R.id.nav_settings)
+                R.id.nav_shopping_list, R.id.nav_members, R.id.nav_payments, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
@@ -50,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
         viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
-        userRepository = UserRepository.getInstance(getApplication());
 
         checkIfSignedIn();
         bindLogOutMenu();
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main_activity2, menu);
+        //getMenuInflater().inflate(R.menu.main_activity2, menu);
         return true;
     }
 
@@ -71,9 +73,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkIfSignedIn(){
-        viewModel.getCurrentUser().observe(this, user -> {
+        LiveData<FirebaseUser> currentUser = viewModel.getCurrentUser();
+        currentUser.observe(this, user -> {
             if (user != null){
+                viewModel.init();
                 setUpMenuUsername();
+                UserInfo userInfo = viewModel.getUserInfo().getValue();
+                if (userInfo == null){
+                    String name = currentUser.getValue().getDisplayName();
+                    viewModel.saveUserInfo(name, "", "");
+                }
+
 
             } else {
                 startLoginActivity();
@@ -97,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpMenuUsername(){
-
         TextView username = binding.navView.getHeaderView(0).findViewById(R.id.menu_user_name);
         username.setText(viewModel.getCurrentUser().getValue().getDisplayName());
         TextView email = binding.navView.getHeaderView(0).findViewById(R.id.menu_user_email);
