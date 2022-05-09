@@ -59,12 +59,15 @@ public class JoinCreateHouseholdViewModel extends AndroidViewModel {
 //        return householdId != null && (!householdId.equals(""));
     }
 
+    public void saveHousehold(Household household){
+        createHouseHold(household);
+    }
+
     public void createHouseHold(Household household){
         householdRepository.createHousehold(household);
     }
 
     public void addHouseholdId(UserInfo userInfo){
-
         userInfoRepository.addHouseholdId(userInfo);
     }
 }

@@ -84,13 +84,6 @@ public class MainActivity extends AppCompatActivity {
                         String name = currentUser.getValue().getDisplayName();
                         viewModel.saveUserInfo(name, "", "");
                     }
-                    // trying to skip the create/join view, but not sure how to do it correctly
-                    // this just takes too long
-//                    if (userInfo.getHouseholdId() != null){
-//                        if (!userInfo.getHouseholdId().equals("")){
-//                            navController.navigate(R.id.nav_shopping_list);
-//                        }
-//                    }
                 });
             } else {
                 startLoginActivity();

@@ -4,10 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.core.os.HandlerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,29 +63,22 @@ public class JoinCreateHouseholdFragment extends Fragment {
 
         viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
             // pass info to view model to initiate household repository
-            String householdId = userInfo.getHouseholdId();
-            user_name = userInfo.getName();
-            user_phone = userInfo.getPhone();
-            Log.d("testing",""+user_name+user_phone);
-            checkIfUserIsInAHousehold(householdId);
-//            viewModel.initHouseHoldRepository(householdId);
-//            viewModel.getCurrentHousehold().observe(getViewLifecycleOwner(), household -> {
-//
-//            });
-//            checkIfUserIsInAHousehold();
+            if (userInfo != null) {
+                String householdId = userInfo.getHouseholdId();
+                user_name = userInfo.getName();
+                user_phone = userInfo.getPhone();
+                checkIfUserIsInAHousehold(householdId);
+            }
         });
 
         return root;
     }
 
     public void checkIfUserIsInAHousehold(String householdId){
-        Log.d("testing",householdId);
         if (householdId != null){
-            Log.d("testing", householdId);
             if(!householdId.equals("")){
                 viewModel.initHouseHoldRepository(householdId);
                 //Navigate to shopping list
-                Log.d("testing", "before navigation");
                 Navigation.findNavController(root).navigate(R.id.nav_shopping_list);
             }
         }
@@ -130,8 +126,48 @@ public class JoinCreateHouseholdFragment extends Fragment {
     }
 
     private void setupJoinButton(){
-        // check if household exists with that id
         // set userInfo household id to be the one joined
+        binding.joinHouseholdBtn.setOnClickListener(view -> {
+            String householdId = binding.joinHouseholdId.getText().toString();
+            // check if household exists with that id
+            viewModel.initHouseHoldRepository(householdId);
 
+            viewModel.getCurrentHousehold().observe(getViewLifecycleOwner(), household -> {
+                if (household == null){
+                    Toast.makeText(getContext(), "Household does not exist", Toast.LENGTH_SHORT).show();
+                } else {
+                    String currentUserId = viewModel.getCurrentUser().getValue().getUid();
+                    String name = household.getName();
+                    String creator = household.getCreator();
+                    List<HouseholdMember> members = household.getMembers();
+                    members = members == null ? new ArrayList<>() : members;
+                    boolean skip = false;
+                    for (HouseholdMember member : members){
+                        if (member.getUid().equals(currentUserId)){
+                            skip = true;
+                            break;
+                        }
+                    }
+                    members.add(new HouseholdMember(currentUserId));
+                    List<ShoppingItem> shoppinglist = household.getShoppinglist();
+                    shoppinglist = shoppinglist == null ? new ArrayList<>() : shoppinglist;
+
+                    // make stupid check since when the user is added to the household
+                    // this observer is fired again
+
+                    if (!skip) {
+                        // save updated household info
+                        viewModel.saveHousehold(new Household(name, creator, members, shoppinglist));
+                    }
+
+                    //add householdId to current user
+                    viewModel.addHouseholdId(new UserInfo(user_name, user_phone, householdId));
+
+                    // when done navigate to shopping list
+                    // will happen in the observer event above checkIfUserIsInAHousehold()
+                }
+            });
+
+        });
     }
 }

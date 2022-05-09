@@ -18,7 +18,7 @@
         android:layout_marginTop="@dimen/medium_vertical_margin"/>
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/join_household_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
         android:minWidth="0dp"/>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/join_household_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/dark_purple"
@@ -48,7 +48,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_medium"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/join_household_id" />
 
     <TextView
         android:id="@+id/textView11"
@@ -58,7 +58,7 @@
         android:text="@string/create_a_household"
         android:textSize="@dimen/text_size_big"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+        app:layout_constraintTop_toBottomOf="@+id/join_household_btn" />
 
     <EditText
         android:id="@+id/create_household_name"
