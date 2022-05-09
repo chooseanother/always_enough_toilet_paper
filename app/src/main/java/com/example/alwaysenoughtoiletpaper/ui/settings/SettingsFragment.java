@@ -117,6 +117,7 @@ public class SettingsFragment extends Fragment {
             if (household != null) {
                 householdName = household.getName();
                 householdCreatorId = household.getCreator();
+                Log.d("delete_leave", "creator: "+householdCreatorId);
                 if(household.getMembers() == null){
                     members = new ArrayList<>();
                 }
@@ -132,6 +133,8 @@ public class SettingsFragment extends Fragment {
                 //set up values in the fragment
                 householdNameET = binding.settingsHouseholdName;
                 householdNameET.setText(householdName);
+
+                setUpLeaveDeleteHousehold();
             }
         });
     }
@@ -139,9 +142,28 @@ public class SettingsFragment extends Fragment {
     private void saveButton(){
         binding.settingsSaveButton.setOnClickListener(view -> {
             viewModel.saveChanges(householdNameET.getText().toString(), householdCode, userNameET.getText().toString(), userPhoneET.getText().toString(), householdCreatorId, members, shoppingList);
-            Log.d("stupid-hc",householdName);
-            Log.d("stupid-hc",householdCode);
             Toast.makeText(getActivity().getApplicationContext(), R.string.changes_saved, Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void setUpLeaveDeleteHousehold(){
+        //currently logged-in user is the creator
+        if(viewModel.getCurrentUser().getValue().getUid().equals(householdCreatorId)){
+            Log.d("delete_leave-creator", householdCreatorId);
+            Log.d("delete_leave-current", viewModel.getCurrentUser().getValue().getUid());
+            //display Delete household
+            binding.settingsDeleteHousehold.setVisibility(View.VISIBLE);
+            binding.settingsDeleteHousehold.setEnabled(true);
+            binding.settingsLeaveHousehold.setVisibility(View.GONE);
+        }
+        else{
+
+            Log.d("delete_leave-creator", "else"+householdCreatorId);
+            Log.d("delete_leave-current", "else"+viewModel.getCurrentUser().getValue().getUid());
+            //display Leave household
+            binding.settingsLeaveHousehold.setVisibility(View.VISIBLE);
+            binding.settingsLeaveHousehold.setEnabled(true);
+            binding.settingsDeleteHousehold.setVisibility(View.GONE);
+        }
     }
 }
