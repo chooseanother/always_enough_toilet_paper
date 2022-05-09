@@ -3,6 +3,9 @@ package com.example.alwaysenoughtoiletpaper.model;
 public class ShoppingItem {
     private String name;
 
+    public ShoppingItem() {
+    }
+
     public ShoppingItem(String name) {
         this.name = name;
     }

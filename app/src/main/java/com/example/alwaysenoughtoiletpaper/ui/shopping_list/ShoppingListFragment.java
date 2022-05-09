@@ -1,7 +1,6 @@
 package com.example.alwaysenoughtoiletpaper.ui.shopping_list;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +17,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentShoppingListBinding;
+import com.example.alwaysenoughtoiletpaper.model.Household;
+import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.adapter.ShoppingItemAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShoppingListFragment extends Fragment {
     private FragmentShoppingListBinding binding;
@@ -29,12 +33,24 @@ public class ShoppingListFragment extends Fragment {
     private ShoppingItemAdapter shoppingItemAdapter;
     private Button boughtButton;
 
+    // save household info when it is observed
+    private String householdCreator;
+    private String householdName;
+    private List<HouseholdMember> householdMemberList = new ArrayList<>();
+    private List<ShoppingItem> householdShoppingItemList = new ArrayList<>();
+
+    // save userInfo when it is observer
+    private String userName;
+    private String userPhone;
+    private String userHouseholdId;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(ShoppingListViewModel.class);
         binding = FragmentShoppingListBinding.inflate(inflater, container, false);
         root = binding.getRoot();
+        viewModel.initUserInfoRepository();
 
         //Set up recycler view
         shoppingList = binding.shoppingListRV;
@@ -43,15 +59,12 @@ public class ShoppingListFragment extends Fragment {
 
         //set up adapter
         shoppingItemAdapter = new ShoppingItemAdapter(viewModel.getShoppingItems().getValue());
-        shoppingItemAdapter.setOnClickListener(((item, delete) -> {
+        shoppingItemAdapter.setOnClickListener(((item, delete, index) -> {
             if(delete){
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setMessage(getContext().getString(R.string.shopping_list_delete_item_text)+" "+item.getName()+"?").setTitle(R.string.shopping_list_delete_item_title);
-                builder.setPositiveButton(R.string.shopping_list_yes_button, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) ->  {
                         viewModel.deleteItem(item);
-                    }
                 });
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -61,7 +74,7 @@ public class ShoppingListFragment extends Fragment {
             }
         }));
 
-        viewModel.getShoppingItems().observe(getViewLifecycleOwner(), shoppingItemAdapter::setShoppingItemList);
+//        viewModel.getShoppingItems().observe(getViewLifecycleOwner(), shoppingItemAdapter::setShoppingItemList);
 
         shoppingList.setAdapter(shoppingItemAdapter);
 
@@ -75,36 +88,30 @@ public class ShoppingListFragment extends Fragment {
             }
         });
 
-        binding.shoppingListFab.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(R.string.shopping_list_add_new_item_text);
-            EditText editText = new EditText(getContext());
-//            builder.setView(R.layout.dialogue_add_item);
-            builder.setView(editText);
-            builder.setPositiveButton(R.string.shopping_list_add_new_item_button_ok, (dialogInterface, i) -> {
+        setupFab();
 
-//                    String newShoppingItem = dialogueBinding.dialogueEditText.getText().toString();
-//                String newShoppingItem = .findViewById(R.id)getText().toString();
-                String text = editText.getText().toString();
-                Toast.makeText(getActivity().getApplicationContext(), "Text: "+text, Toast.LENGTH_SHORT).show();
-                viewModel.addItem(new ShoppingItem(text));
+        setupBoughtButton();
+
+        viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
+            userName = userInfo.getName();
+            userPhone = userInfo.getPhone();
+            userHouseholdId = userInfo.getHouseholdId();
+
+            viewModel.initHouseholdRepository(userHouseholdId);
+
+            viewModel.getHousehold().observe(getViewLifecycleOwner(), household -> {
+                //Toast.makeText(getContext(), ""+household.getName(), Toast.LENGTH_SHORT).show();
+
+                householdCreator = household.getCreator();
+                householdName = household.getName();
+                householdMemberList = household.getMembers();
+                householdMemberList = householdMemberList == null ? new ArrayList<>() : householdMemberList;
+                householdShoppingItemList = household.getShoppinglist();
+                householdShoppingItemList = householdShoppingItemList == null ? new ArrayList<>() : householdShoppingItemList;
+
+                // update shoppingItemAdapter::setShoppingItemList
+                shoppingItemAdapter.setShoppingItemList(householdShoppingItemList);
             });
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        });
-
-        binding.shoppingButtonBought.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(getContext().getString(R.string.shopping_list_bought_dailogue));
-            builder.setPositiveButton(R.string.shopping_list_yes_button, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    viewModel.bought();
-                }
-            });
-            AlertDialog dialog = builder.create();
-            dialog.show();
         });
 
 
@@ -115,6 +122,39 @@ public class ShoppingListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void setupFab(){
+        binding.shoppingListFab.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.shopping_list_add_new_item_text);
+            EditText editText = new EditText(getContext());
+            builder.setView(editText);
+            builder.setPositiveButton(R.string.shopping_list_add_new_item_button_ok, (dialogInterface, i) -> {
+                String text = editText.getText().toString();
+//                Toast.makeText(getActivity().getApplicationContext(), "Text: "+text, Toast.LENGTH_SHORT).show();
+//                viewModel.addItem(new ShoppingItem(text));
+                ShoppingItem shoppingItem = new ShoppingItem(text);
+                householdShoppingItemList.add(shoppingItem);
+                Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList);
+                viewModel.updateHousehold(household);
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
+    }
+
+    private void setupBoughtButton(){
+        binding.shoppingButtonBought.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(getContext().getString(R.string.shopping_list_bought_dailogue));
+            builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) -> {
+                viewModel.bought();
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
     }
 }
 

@@ -59,16 +59,16 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
             itemCheckBox = itemView.findViewById(R.id.shopping_list_item_checkbox);
             delete = itemView.findViewById(R.id.shopping_list_delete);
             itemCheckBox.setOnClickListener(view -> {
-                listener.OnClick(shoppingItemList.get(getBindingAdapterPosition()),false);
+                listener.OnClick(shoppingItemList.get(getBindingAdapterPosition()),false, getBindingAdapterPosition());
             });
             // TODO set onclick listener for delete
             delete.setOnClickListener(view -> {
-                listener.OnClick(shoppingItemList.get(getBindingAdapterPosition()),true);
+                listener.OnClick(shoppingItemList.get(getBindingAdapterPosition()),true, getBindingAdapterPosition());
             });
         }
     }
 
     public interface OnClickListener {
-        void OnClick(ShoppingItem item, boolean delete);
+        void OnClick(ShoppingItem item, boolean delete, int index);
     }
 }
