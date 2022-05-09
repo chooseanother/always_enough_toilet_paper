@@ -1,11 +1,13 @@
 package com.example.alwaysenoughtoiletpaper;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.alwaysenoughtoiletpaper.databinding.ActivityMainBinding;
 import com.example.alwaysenoughtoiletpaper.data.UserRepository;
 import com.google.android.material.navigation.NavigationView;
@@ -17,6 +19,8 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.net.URI;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -99,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
         TextView email = binding.navView.getHeaderView(0).findViewById(R.id.menu_user_email);
         email.setText(viewModel.getCurrentUser().getValue().getEmail());
         ImageView image = binding.navView.getHeaderView(0).findViewById(R.id.menu_user_image);
-        image.setImageURI(viewModel.getCurrentUser().getValue().getPhotoUrl());
+        Uri photoUrl = viewModel.getCurrentUser().getValue().getPhotoUrl();
+        Glide.with(MainActivity.this).load(photoUrl).into(image);
     }
 }
