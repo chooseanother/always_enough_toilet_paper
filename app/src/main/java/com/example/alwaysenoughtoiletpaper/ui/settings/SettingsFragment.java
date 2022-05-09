@@ -57,6 +57,7 @@ public class SettingsFragment extends Fragment {
         initUserInfo();
         initHousehold();
         saveButton();
+        setUpLeaveDeleteHousehold();
 
         return root;
     }
@@ -139,9 +140,23 @@ public class SettingsFragment extends Fragment {
     private void saveButton(){
         binding.settingsSaveButton.setOnClickListener(view -> {
             viewModel.saveChanges(householdNameET.getText().toString(), householdCode, userNameET.getText().toString(), userPhoneET.getText().toString(), householdCreatorId, members, shoppingList);
-            Log.d("stupid-hc",householdName);
-            Log.d("stupid-hc",householdCode);
             Toast.makeText(getActivity().getApplicationContext(), R.string.changes_saved, Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void setUpLeaveDeleteHousehold(){
+        //currently logged-in user is the creator
+        if(viewModel.getCurrentUser().getValue().getUid().equals(householdCreatorId)){
+            //display Delete household
+            binding.settingsDeleteHousehold.setVisibility(View.VISIBLE);
+            binding.settingsDeleteHousehold.setEnabled(true);
+            binding.settingsLeaveHousehold.setVisibility(View.GONE);
+        }
+        else{
+            //display Leave household
+            binding.settingsLeaveHousehold.setVisibility(View.VISIBLE);
+            binding.settingsLeaveHousehold.setEnabled(true);
+            binding.settingsDeleteHousehold.setVisibility(View.GONE);
+        }
     }
 }

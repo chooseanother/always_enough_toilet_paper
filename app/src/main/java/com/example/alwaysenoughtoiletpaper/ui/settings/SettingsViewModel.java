@@ -75,4 +75,9 @@ public class SettingsViewModel extends AndroidViewModel {
         //save household info
         householdRepository.saveHousehold(new Household(householdName, creatorId, members, shoppingList));
     }
+
+    //currently logged in user Uid
+    public LiveData<FirebaseUser> getCurrentUserId(){
+        return userRepository.getCurrentUser();
+    }
 }
