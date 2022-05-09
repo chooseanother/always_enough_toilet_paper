@@ -9,8 +9,12 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.alwaysenoughtoiletpaper.R;
+import com.example.alwaysenoughtoiletpaper.data.HouseholdRepository;
+import com.example.alwaysenoughtoiletpaper.data.UserInfoRepository;
 import com.example.alwaysenoughtoiletpaper.data.UserRepository;
+import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
+import com.example.alwaysenoughtoiletpaper.model.UserInfo;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
@@ -18,6 +22,9 @@ import java.util.List;
 
 public class ShoppingListViewModel extends AndroidViewModel {
     private final UserRepository userRepository;
+    private final UserInfoRepository userInfoRepository;
+    private final HouseholdRepository householdRepository;
+
     private MutableLiveData<List<ShoppingItem>> shoppingListItems;
     List<ShoppingItem> testShoppingList;
     private Application application;
@@ -27,6 +34,8 @@ public class ShoppingListViewModel extends AndroidViewModel {
     public ShoppingListViewModel(@NonNull Application application) {
         super(application);
         userRepository = UserRepository.getInstance(application);
+        userInfoRepository = UserInfoRepository.getInstance();
+        householdRepository = HouseholdRepository.getInstance();
         this.application = application;
         PopulateShoppingList();
         numberOfTicked = new MutableLiveData<>();
@@ -38,10 +47,26 @@ public class ShoppingListViewModel extends AndroidViewModel {
         return userRepository.getCurrentUser();
     }
 
-    public void signOut(){
-        userRepository.signOut();
+    public LiveData<UserInfo> getCurrentUserInfo(){
+        return userInfoRepository.getUserInfo();
     }
 
+    public LiveData<Household> getHousehold(){
+        return householdRepository.getCurrentHousehold();
+    }
+
+    public void initUserInfoRepository(){
+        String userId = userRepository.getCurrentUser().getValue().getUid();
+        userInfoRepository.init(userId);
+    }
+
+    public void initHouseholdRepository(String householdId){
+        householdRepository.init(householdId);
+    }
+
+    public void updateHousehold(Household household){
+        householdRepository.saveHousehold(household);
+    }
 
     public MutableLiveData<List<ShoppingItem>> getShoppingItems() {
         return shoppingListItems;
