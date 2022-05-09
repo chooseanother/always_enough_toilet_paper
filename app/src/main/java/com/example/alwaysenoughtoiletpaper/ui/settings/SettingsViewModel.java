@@ -12,6 +12,7 @@ import com.example.alwaysenoughtoiletpaper.data.SharedPreferencesRepository;
 import com.example.alwaysenoughtoiletpaper.data.UserInfoRepository;
 import com.example.alwaysenoughtoiletpaper.data.UserRepository;
 import com.example.alwaysenoughtoiletpaper.model.Household;
+import com.example.alwaysenoughtoiletpaper.model.HouseholdAndUser;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.Member;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
@@ -69,15 +70,61 @@ public class SettingsViewModel extends AndroidViewModel {
         sharedPreferencesRepository.setNotificationPreference("item_added_notification", preference);
     }
 
-    public void saveChanges(String householdName, String householdCode, String userName, String userPhone, String creatorId, List<HouseholdMember> members, List<ShoppingItem> shoppingList){
+    public void saveChanges(HouseholdAndUser householdAndUser){
         //save user info
-        userInfoRepository.saveUserInfo(userName, userPhone, householdCode);
+        userInfoRepository.saveUserInfo(householdAndUser.getUserName(), householdAndUser.getPhone(), householdAndUser.getHouseholdId());
         //save household info
-        householdRepository.saveHousehold(new Household(householdName, creatorId, members, shoppingList));
+        householdRepository.saveHousehold(new Household(householdAndUser.getHouseholdName(), householdAndUser.getCreator(), householdAndUser.getMembers(), householdAndUser.getShoppinglist()));
     }
 
     //currently logged in user Uid
     public LiveData<FirebaseUser> getCurrentUserId(){
         return userRepository.getCurrentUser();
+    }
+
+    public void leaveHousehold(HouseholdAndUser householdAndUser){
+        //remove this user id from his household's members
+        List<HouseholdMember> newMembers = householdAndUser.getMembers();
+        //find this member in the member list of household
+        for (HouseholdMember member:newMembers) {
+            if(member.getUid().equals(householdAndUser.getUserId())){
+                //remove him
+                newMembers.remove(member);
+                break;
+            }
+        }
+        //save changes in database
+        householdRepository.saveHousehold(new Household(householdAndUser.getHouseholdName(), householdAndUser.getCreator(), newMembers, householdAndUser.getShoppinglist()));
+
+        //remove the household from the member
+        userInfoRepository.saveUserInfo(householdAndUser.getUserName(), householdAndUser.getPhone(), "");
+    }
+
+    public void leaveHouseholdAsAdmin(HouseholdAndUser householdAndUser){
+        //check if there is anybody else in the household
+        if(householdAndUser.getMembers().size() == 1){
+            //this user is the only one -> delete household
+            householdRepository.saveHousehold(new Household());
+        }
+        //more people in household
+        else {
+            //remove this user id from his household's members
+            List<HouseholdMember> newMembers = householdAndUser.getMembers();
+            //find this member in the member list of household
+            for (HouseholdMember member : newMembers) {
+                if (member.getUid().equals(householdAndUser.getUserId())) {
+                    //remove him
+                    newMembers.remove(member);
+                    break;
+                }
+            }
+            //set the creator of household to a random person
+            String newCreator = newMembers.get(0).getUid();
+            //save changes in database
+            householdRepository.saveHousehold(new Household(householdAndUser.getHouseholdName(), newCreator, newMembers, householdAndUser.getShoppinglist()));
+        }
+
+        //remove the household from the member
+        userInfoRepository.saveUserInfo(householdAndUser.getUserName(), householdAndUser.getPhone(), "");
     }
 }

@@ -168,20 +168,19 @@
         android:textSize="@dimen/text_size_medium"
         android:backgroundTint="@color/pink_delete"
         android:enabled="false"
-
         />
 
     <Button
+        android:id="@+id/settings_leave_household_as_admin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/settings_delete_household"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_leave_household"
-        android:layout_marginTop="@dimen/small_vertical_margin"
-        android:textSize="@dimen/text_size_medium"
         android:backgroundTint="@color/pink_delete"
-        android:id="@+id/settings_delete_household"
-        android:enabled="false"/>
+        android:enabled="false"
+        android:text="@string/settings_leave_household_as_admin"
+        android:textSize="@dimen/text_size_medium"
+        android:layout_marginTop="@dimen/big_vertical_margin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
