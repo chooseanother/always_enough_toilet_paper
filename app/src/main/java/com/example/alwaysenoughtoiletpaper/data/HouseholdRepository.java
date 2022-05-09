@@ -39,5 +39,7 @@ public class HouseholdRepository {
         dbRef.setValue(household);
     }
 
-
+    public void saveHousehold(Household household){
+        dbRef.setValue(household);
+    }
 }

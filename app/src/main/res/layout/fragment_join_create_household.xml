@@ -21,6 +21,7 @@
         android:id="@+id/join_household_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size_small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView10"
         android:hint="@string/household_code_example"/>

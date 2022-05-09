@@ -28,6 +28,7 @@
     <string name="settings_notification2">Item bought</string>
     <string name="settings_leave_household">Leave household</string>
     <string name="settings_delete_household">Delete household</string>
+    <string name="changes_saved">Changes saved</string>
     <!--dummy values-->
     <string name="settings_dummy_phone">50132420</string>
     <string name="settings_dummy_name">Maggie</string>

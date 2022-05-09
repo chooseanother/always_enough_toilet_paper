@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:text="@string/settings_household_dummy_code"
         android:textColor="@color/black"
-        android:textSize="@dimen/text_size_medium"
+        android:textSize="@dimen/text_size_small"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -100,16 +100,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
+    <Button
+        android:id="@+id/settings_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/fui_button_text_save"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/settings_phone" />
+
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/big_vertical_margin"
         android:text="@string/settings_notifications"
         android:textColor="@color/grey"
         android:textSize="@dimen/text_size_small"
+        android:layout_marginTop="@dimen/big_vertical_margin"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_phone" />
+        app:layout_constraintTop_toBottomOf="@+id/settings_save_button" />
 
     <TextView
         android:id="@+id/textView7"

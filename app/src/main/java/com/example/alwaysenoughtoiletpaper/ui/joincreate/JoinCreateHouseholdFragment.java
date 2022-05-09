@@ -1,17 +1,12 @@
 package com.example.alwaysenoughtoiletpaper.ui.joincreate;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
-import androidx.core.os.HandlerCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +17,8 @@ import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentJoinCreateHouseholdBinding;
 import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
-import com.example.alwaysenoughtoiletpaper.model.Member;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.UserInfo;
-import com.example.alwaysenoughtoiletpaper.ui.shopping_list.ShoppingListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +31,8 @@ public class JoinCreateHouseholdFragment extends Fragment {
     private FragmentJoinCreateHouseholdBinding binding;
 
 
-    private String user_name;
-    private String user_phone;
+    private String userName;
+    private String userPhone;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,8 +58,8 @@ public class JoinCreateHouseholdFragment extends Fragment {
             // pass info to view model to initiate household repository
             if (userInfo != null) {
                 String householdId = userInfo.getHouseholdId();
-                user_name = userInfo.getName();
-                user_phone = userInfo.getPhone();
+                userName = userInfo.getName();
+                userPhone = userInfo.getPhone();
                 checkIfUserIsInAHousehold(householdId);
             }
         });
@@ -116,7 +109,7 @@ public class JoinCreateHouseholdFragment extends Fragment {
             viewModel.createHouseHold(new Household(name,creator,members,shoppinglist));
 
             //add householdId to current user
-            viewModel.addHouseholdId(new UserInfo(user_name, user_phone, householdId.toString()));
+            viewModel.addHouseholdId(new UserInfo(userName, userPhone, householdId.toString()));
 
             // when done navigate to shopping list
             // will happen in the observer event above checkIfUserIsInAHousehold()
@@ -161,7 +154,7 @@ public class JoinCreateHouseholdFragment extends Fragment {
                     }
 
                     //add householdId to current user
-                    viewModel.addHouseholdId(new UserInfo(user_name, user_phone, householdId));
+                    viewModel.addHouseholdId(new UserInfo(userName, userPhone, householdId));
 
                     // when done navigate to shopping list
                     // will happen in the observer event above checkIfUserIsInAHousehold()

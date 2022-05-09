@@ -13,6 +13,7 @@
     <dimen name="shopping_list_margin_from_top">64dp</dimen>
     <dimen name="medium_vertical_margin">24dp</dimen>
 
+    <dimen name="text_size_mini">8sp</dimen>
     <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_medium">20sp</dimen>
     <dimen name="text_size_big">36sp</dimen>
