@@ -7,22 +7,20 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.alwaysenoughtoiletpaper.databinding.FragmentBoughtTabBinding;
-import com.example.alwaysenoughtoiletpaper.databinding.FragmentShoppingListBinding;
-import com.example.alwaysenoughtoiletpaper.ui.shopping_list.ShoppingListViewModel;
+import com.example.alwaysenoughtoiletpaper.databinding.FragmentShoppingBoughtTabBinding;
+
 
 public class BoughtTabFragment extends Fragment {
 
     private View root;
-    private FragmentBoughtTabBinding binding;
+    private FragmentShoppingBoughtTabBinding binding;
 //    private BoughtTabViewModel viewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 //        viewModel = new ViewModelProvider(this).get(BoughtTabViewModel.class);
-        binding = FragmentBoughtTabBinding.inflate(inflater, container, false);
+        binding = FragmentShoppingBoughtTabBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
         return root;

@@ -7,20 +7,19 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
-import com.example.alwaysenoughtoiletpaper.databinding.FragmentHistoryTabBinding;
+import com.example.alwaysenoughtoiletpaper.databinding.FragmentShoppingHistoryTabBinding;
 
 public class HistoryTabFragment extends Fragment {
 
     private View root;
-    private FragmentHistoryTabBinding binding;
+    private FragmentShoppingHistoryTabBinding binding;
 //    private HistoryTabViewModel viewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 //        viewModel = new ViewModelProvider(this).get(HistoryTabViewModel.class);
-        binding = FragmentHistoryTabBinding.inflate(inflater, container, false);
+        binding = FragmentShoppingHistoryTabBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
         return root;

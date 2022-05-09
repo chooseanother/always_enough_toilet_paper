@@ -52,6 +52,7 @@
     <string name="shopping_list_bought_enter_money">Enter money</string>
 
 
+
     <!--PAYMENTS-->
     <string name="payments_current">Current</string>
     <string name="payments_history">History</string>
@@ -60,5 +61,7 @@
     <string name="payments_current_requests">Requests</string>
     <string name="payments_history_sent">Sent</string>
     <string name="payments_history_received">Received</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
