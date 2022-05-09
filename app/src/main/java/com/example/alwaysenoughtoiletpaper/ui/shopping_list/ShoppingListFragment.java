@@ -53,30 +53,10 @@ public class ShoppingListFragment extends Fragment {
         viewModel.initUserInfoRepository();
 
         //Set up recycler view
-        shoppingList = binding.shoppingListRV;
-        shoppingList.hasFixedSize();
-        shoppingList.setLayoutManager(new LinearLayoutManager(root.getContext()));
+        setupRecyclerView();
 
         //set up adapter
-        shoppingItemAdapter = new ShoppingItemAdapter(viewModel.getShoppingItems().getValue());
-        shoppingItemAdapter.setOnClickListener(((item, delete, index) -> {
-            if(delete){
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setMessage(getContext().getString(R.string.shopping_list_delete_item_text)+" "+item.getName()+"?").setTitle(R.string.shopping_list_delete_item_title);
-                builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) ->  {
-                        viewModel.deleteItem(item);
-                });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-            else{
-                viewModel.tickItem(item);
-            }
-        }));
-
-//        viewModel.getShoppingItems().observe(getViewLifecycleOwner(), shoppingItemAdapter::setShoppingItemList);
-
-        shoppingList.setAdapter(shoppingItemAdapter);
+        setupAdapter();
 
         boughtButton = binding.shoppingButtonBought;
         viewModel.getNumberOfTicked().observe(getViewLifecycleOwner(), integer -> {
@@ -90,30 +70,11 @@ public class ShoppingListFragment extends Fragment {
 
         setupFab();
 
+
         setupBoughtButton();
 
-        viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
-            userName = userInfo.getName();
-            userPhone = userInfo.getPhone();
-            userHouseholdId = userInfo.getHouseholdId();
-
-            viewModel.initHouseholdRepository(userHouseholdId);
-
-            viewModel.getHousehold().observe(getViewLifecycleOwner(), household -> {
-                //Toast.makeText(getContext(), ""+household.getName(), Toast.LENGTH_SHORT).show();
-
-                householdCreator = household.getCreator();
-                householdName = household.getName();
-                householdMemberList = household.getMembers();
-                householdMemberList = householdMemberList == null ? new ArrayList<>() : householdMemberList;
-                householdShoppingItemList = household.getShoppinglist();
-                householdShoppingItemList = householdShoppingItemList == null ? new ArrayList<>() : householdShoppingItemList;
-
-                // update shoppingItemAdapter::setShoppingItemList
-                shoppingItemAdapter.setShoppingItemList(householdShoppingItemList);
-            });
-        });
-
+        // BIG BROTHER!
+        observeChanges();
 
         return root;
     }
@@ -122,6 +83,35 @@ public class ShoppingListFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void setupRecyclerView() {
+        shoppingList = binding.shoppingListRV;
+        shoppingList.hasFixedSize();
+        shoppingList.setLayoutManager(new LinearLayoutManager(root.getContext()));
+    }
+
+    private void setupAdapter() {
+        shoppingItemAdapter = new ShoppingItemAdapter(new ArrayList<>());
+        shoppingItemAdapter.setOnClickListener(((item, delete, index) -> {
+            if (delete) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(getContext().getString(R.string.shopping_list_delete_item_text) + " " + item.getName() + "?").setTitle(R.string.shopping_list_delete_item_title);
+                builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) -> {
+
+                    householdShoppingItemList.remove(index);
+                    Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList);
+                    viewModel.updateHousehold(household);
+                    viewModel.updateTicked(index);
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                viewModel.tickItem(index);
+            }
+        }));
+
+        shoppingList.setAdapter(shoppingItemAdapter);
     }
 
     private void setupFab(){
@@ -150,10 +140,32 @@ public class ShoppingListFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(getContext().getString(R.string.shopping_list_bought_dailogue));
             builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) -> {
-                viewModel.bought();
+//                viewModel.bought();
             });
             AlertDialog dialog = builder.create();
             dialog.show();
+        });
+    }
+
+    private void observeChanges() {
+        viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
+            userName = userInfo.getName();
+            userPhone = userInfo.getPhone();
+            userHouseholdId = userInfo.getHouseholdId();
+
+            viewModel.initHouseholdRepository(userHouseholdId);
+
+            viewModel.getHousehold().observe(getViewLifecycleOwner(), household -> {
+                householdCreator = household.getCreator();
+                householdName = household.getName();
+                householdMemberList = household.getMembers();
+                householdMemberList = householdMemberList == null ? new ArrayList<>() : householdMemberList;
+                householdShoppingItemList = household.getShoppinglist();
+                householdShoppingItemList = householdShoppingItemList == null ? new ArrayList<>() : householdShoppingItemList;
+
+                // update shoppingItemAdapter::setShoppingItemList
+                shoppingItemAdapter.setShoppingItemList(householdShoppingItemList);
+            });
         });
     }
 }
