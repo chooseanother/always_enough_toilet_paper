@@ -1,8 +1,14 @@
 package com.example.alwaysenoughtoiletpaper.data;
 
+import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdLiveData;
+import com.example.alwaysenoughtoiletpaper.model.Member;
+import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
+import com.example.alwaysenoughtoiletpaper.model.UserInfo;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.List;
 
 public class HouseholdRepository {
     private HouseholdLiveData currentHousehold;
@@ -29,7 +35,9 @@ public class HouseholdRepository {
         return currentHousehold;
     }
 
-    public void createHousehold(){
-
+    public void createHousehold(Household household){
+        dbRef.setValue(household);
     }
+
+
 }

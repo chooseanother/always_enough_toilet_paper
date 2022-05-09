@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
     private MainActivityViewModel viewModel;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 R.id.nav_shopping_list, R.id.nav_members, R.id.nav_payments, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
@@ -78,13 +79,12 @@ public class MainActivity extends AppCompatActivity {
             if (user != null){
                 viewModel.init();
                 setUpMenuUsername();
-                UserInfo userInfo = viewModel.getUserInfo().getValue();
-                if (userInfo == null){
-                    String name = currentUser.getValue().getDisplayName();
-                    viewModel.saveUserInfo(name, "", "");
-                }
-
-
+                viewModel.getUserInfo().observe(this, userInfo -> {
+                    if (userInfo == null){
+                        String name = currentUser.getValue().getDisplayName();
+                        viewModel.saveUserInfo(name, "", "");
+                    }
+                });
             } else {
                 startLoginActivity();
             }

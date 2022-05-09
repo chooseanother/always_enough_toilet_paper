@@ -4,14 +4,14 @@ import java.util.List;
 
 public class Household {
     private String name;
-    private List<Member> members;
-    private List<ShoppingItem> shoppinglist;
     private String creator;
+    private List<HouseholdMember> members;
+    private List<ShoppingItem> shoppinglist;
 
     public Household() {
     }
 
-    public Household(String name, List<Member> members, List<ShoppingItem> shoppinglist, String creator) {
+    public Household(String name, String creator, List<HouseholdMember> members, List<ShoppingItem> shoppinglist) {
         this.name = name;
         this.members = members;
         this.shoppinglist = shoppinglist;
@@ -26,11 +26,11 @@ public class Household {
         this.name = name;
     }
 
-    public List<Member> getMembers() {
+    public List<HouseholdMember> getMembers() {
         return members;
     }
 
-    public void setMembers(List<Member> members) {
+    public void setMembers(List<HouseholdMember> members) {
         this.members = members;
     }
 
