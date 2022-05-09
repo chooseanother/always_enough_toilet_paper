@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/member_list_member"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/small_vertical_margin"
+    android:layout_marginTop="@dimen/small_vertical_margin"
+    android:layout_marginEnd="@dimen/small_vertical_margin"
+    android:background="@drawable/list_item_background"
+    android:padding="@dimen/small_vertical_margin"
+    android:backgroundTint="@color/dark_purple">
+
+    <CheckBox
+        android:id="@+id/shopping_list_item_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onCheckboxClicked"
+        android:text="Shopping list item"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textColorHighlight="@color/light_purple"
+        android:textColor="@color/white"/>
+
+    <ImageView
+        android:id="@+id/shopping_list_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_shopping_list_delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
