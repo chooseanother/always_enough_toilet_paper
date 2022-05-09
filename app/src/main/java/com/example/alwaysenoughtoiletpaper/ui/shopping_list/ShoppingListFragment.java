@@ -7,14 +7,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentShoppingListBinding;
-import com.example.alwaysenoughtoiletpaper.ui.shopping_list.tabs.BoughtTabFragment;
-import com.example.alwaysenoughtoiletpaper.ui.shopping_list.tabs.HistoryTabFragment;
-import com.example.alwaysenoughtoiletpaper.ui.shopping_list.tabs.ListTabFragment;
 import com.google.android.material.tabs.TabLayout;
 
 public class ShoppingListFragment extends Fragment {
@@ -33,7 +29,7 @@ public class ShoppingListFragment extends Fragment {
         binding = FragmentShoppingListBinding.inflate(inflater, container, false);
         root = binding.getRoot();
 
-        tabsPagerAdapter = new TabsPagerAdapter(getActivity().getSupportFragmentManager(), 3);
+        tabsPagerAdapter = new TabsPagerAdapter(getActivity().getSupportFragmentManager(), 2);
         viewPager = binding.shoppingListViewPager;
         viewPager.setAdapter(tabsPagerAdapter);
         tabLayout = binding.tabLayoutShoppingList;

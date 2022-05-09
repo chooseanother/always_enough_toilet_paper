@@ -1,9 +1,14 @@
 package com.example.alwaysenoughtoiletpaper.ui.shopping_list.tabs;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,21 +17,28 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.alwaysenoughtoiletpaper.R;
+import com.example.alwaysenoughtoiletpaper.databinding.DialogueAddItemBinding;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentShoppingListTabBinding;
+import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.adapter.ShoppingItemAdapter;
 
 public class ListTabFragment extends Fragment {
 
     private View root;
     private FragmentShoppingListTabBinding binding;
+    private DialogueAddItemBinding dialogueBinding;
     private ListTabViewModel viewModel;
     private RecyclerView shoppingList;
     private ShoppingItemAdapter shoppingItemAdapter;
+    private Button boughtButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(ListTabViewModel.class);
         binding = FragmentShoppingListTabBinding.inflate(inflater, container, false);
+        dialogueBinding = DialogueAddItemBinding.inflate(inflater, container, false);
+
         root = binding.getRoot();
 
         //Set up recycler view
@@ -38,17 +50,68 @@ public class ListTabFragment extends Fragment {
         shoppingItemAdapter = new ShoppingItemAdapter(viewModel.getShoppingItems().getValue());
         shoppingItemAdapter.setOnClickListener(((item, delete) -> {
             if(delete){
-                Toast.makeText(root.getContext(), "Delete: " + item.getName(), Toast.LENGTH_SHORT).show();
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(getContext().getString(R.string.shopping_list_delete_item_text)+" "+item.getName()+"?").setTitle(R.string.shopping_list_delete_item_title);
+                builder.setPositiveButton(R.string.shopping_list_yes_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        viewModel.deleteItem(item);
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
             else{
-                item.setBought(true);
+                viewModel.tickItem(item);
             }
         }));
 
         viewModel.getShoppingItems().observe(getViewLifecycleOwner(), shoppingItemAdapter::setShoppingItemList);
 
         shoppingList.setAdapter(shoppingItemAdapter);
+
+        boughtButton = binding.shoppingButtonBought;
+        viewModel.getNumberOfTicked().observe(getViewLifecycleOwner(), integer -> {
+            if(integer == 0){
+                boughtButton.setEnabled(false);
+            }
+            else{
+                boughtButton.setEnabled(true);
+            }
+        });
+
+        binding.shoppingListFab.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.shopping_list_add_new_item_text);
+            EditText editText = new EditText(getContext());
+//            builder.setView(R.layout.dialogue_add_item);
+            builder.setView(editText);
+            builder.setPositiveButton(R.string.shopping_list_add_new_item_button_ok, (dialogInterface, i) -> {
+
+//                    String newShoppingItem = dialogueBinding.dialogueEditText.getText().toString();
+//                String newShoppingItem = .findViewById(R.id)getText().toString();
+                String text = editText.getText().toString();
+                Toast.makeText(getActivity().getApplicationContext(), "Text: "+text, Toast.LENGTH_SHORT).show();
+                viewModel.addItem(new ShoppingItem(text));
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
+
+        binding.shoppingButtonBought.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(getContext().getString(R.string.shopping_list_bought_dailogue));
+            builder.setPositiveButton(R.string.shopping_list_yes_button, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    viewModel.bought();
+                }
+            });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
+
 
         return root;
     }

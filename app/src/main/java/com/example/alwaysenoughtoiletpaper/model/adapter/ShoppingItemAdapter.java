@@ -34,11 +34,11 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
     public void onBindViewHolder(@NonNull ShoppingItemAdapter.ViewHolder holder, int position) {
         ShoppingItem shoppingItem = shoppingItemList.get(position);
         holder.itemCheckBox.setText(shoppingItem.getName());
-        holder.itemCheckBox.setChecked(shoppingItem.isBought());
     }
 
     public void setShoppingItemList(List<ShoppingItem> shoppingItemList) {
         this.shoppingItemList = shoppingItemList;
+        notifyDataSetChanged();
     }
 
     @Override

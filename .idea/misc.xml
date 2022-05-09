@@ -13,10 +13,13 @@
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.124" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/drawable/ic_menu_settings.xml" value="0.124" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/drawable/ic_settings_copy.xml" value="0.124" />
+        <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/drawable/ic_shopping_add.xml" value="0.222" />
+        <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/drawable/ic_shopping_list_bought.xml" value="0.2375" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/activity_main.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/activity_sign_in.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/app_bar_main.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/content_main.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/dialogue_add_item.xml" value="0.264" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_dialog_help.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_history_tab.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_home.xml" value="0.20863616930312098" />
@@ -25,7 +28,9 @@
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_members.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_payments.xml" value="0.2" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_settings.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_shopping_history_tab.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_shopping_list.xml" value="0.4" />
+        <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_shopping_list_tab.xml" value="0.176" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_slideshow.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/fragment_tab_list.xml" value="0.20863616930312098" />
         <entry key="..\:/Users/Maggie/AndroidStudioProjects/always_enough_toilet_paper/app/src/main/res/layout/member_item.xml" value="0.4" />

@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.alwaysenoughtoiletpaper.ui.shopping_list.tabs.BoughtTabFragment;
 import com.example.alwaysenoughtoiletpaper.ui.shopping_list.tabs.HistoryTabFragment;
 import com.example.alwaysenoughtoiletpaper.ui.shopping_list.tabs.ListTabFragment;
 
@@ -25,8 +24,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return new ListTabFragment();
             case 1:
-                return new BoughtTabFragment();
-            case 2:
                 return new HistoryTabFragment();
             default:
                 return null;
@@ -40,8 +37,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return "Shopping";
             case 1:
-                return "Bought";
-            case 2:
                 return "History";
             default:
                 return null;
