@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentJoinCreateHouseholdBinding;
 import com.example.alwaysenoughtoiletpaper.model.Household;
+import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.Member;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.UserInfo;
@@ -109,9 +110,12 @@ public class JoinCreateHouseholdFragment extends Fragment {
             // init household repository with that id
             viewModel.initHouseHoldRepository(householdId.toString());
             // save household info there
-            String name = "New Household";
+            String name = binding.createHouseholdName.getText().toString();
+            name = name.equals("") ? "New Household" : name;
             String creator = viewModel.getCurrentUser().getValue().getUid();
-            List<Member> members = new ArrayList<>();
+            List<HouseholdMember> members = new ArrayList<>();
+            members.add(new HouseholdMember(creator));
+
             List<ShoppingItem> shoppinglist = new ArrayList<>();
             viewModel.createHouseHold(new Household(name,creator,members,shoppinglist));
 
