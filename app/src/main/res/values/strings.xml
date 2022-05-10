@@ -83,5 +83,7 @@
     <string name="history_delete_yes_goddamn">YES GODDAMN!!</string>
 
 
+    <!--MEMBERS-->
+    <string name="members_copied_phone_number">Phone number was copied</string>
 
 </resources>

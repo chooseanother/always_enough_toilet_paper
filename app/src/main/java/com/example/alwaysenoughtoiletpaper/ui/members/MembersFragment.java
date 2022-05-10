@@ -1,5 +1,8 @@
 package com.example.alwaysenoughtoiletpaper.ui.members;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentMembersBinding;
 import com.example.alwaysenoughtoiletpaper.model.adapter.MemberAdapter;
 
@@ -40,7 +44,11 @@ public class MembersFragment extends Fragment {
             if (delete){
                 Toast.makeText(root.getContext(), "Delete: " + member.getName(), Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(root.getContext(), "Phone: " + member.getPhoneNumber(), Toast.LENGTH_SHORT).show();
+                ClipboardManager clipboardManager = (ClipboardManager) root.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Household code",member.getPhoneNumber());
+                clipboardManager.setPrimaryClip(clip);
+                Toast.makeText(root.getContext(), R.string.members_copied_phone_number, Toast.LENGTH_SHORT).show();
+
             }
         });
 
