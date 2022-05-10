@@ -6,18 +6,27 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentHistoryBinding;
+import com.example.alwaysenoughtoiletpaper.model.HistoryItem;
+import com.example.alwaysenoughtoiletpaper.model.Household;
+import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
+import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.adapter.HistoryAdapter;
 import com.example.alwaysenoughtoiletpaper.model.adapter.MemberAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HistoryFragment extends Fragment {
 
@@ -25,7 +34,19 @@ public class HistoryFragment extends Fragment {
     private FragmentHistoryBinding binding;
     private HistoryViewModel viewModel;
     private HistoryAdapter historyAdapter;
-    RecyclerView historyList;
+    private RecyclerView historyList;
+
+    // save userInfo when it is observer
+    private String userName;
+    private String userPhone;
+    private String userHouseholdId;
+
+    // save household info when it is observed
+    private String householdCreator;
+    private String householdName;
+    private List<HouseholdMember> householdMemberList = new ArrayList<>();
+    private List<ShoppingItem> householdShoppingItemList = new ArrayList<>();
+    private List<HistoryItem> householdHistoryItemList = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,11 +60,60 @@ public class HistoryFragment extends Fragment {
         historyList.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
         // Setup adapter
-        historyAdapter = new HistoryAdapter(viewModel.getHistory().getValue());
-
-        viewModel.getHistory().observe(getViewLifecycleOwner(), historyAdapter::setHistoryItems);
+        historyAdapter = new HistoryAdapter(new ArrayList<>());
         historyList.setAdapter(historyAdapter);
 
+        // Setup fab
+        setupDeleteFab();
+
+        initUserInfoAndHousehold();
+        observeHousehold();
+
+        return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    private void initUserInfoAndHousehold(){
+        viewModel.initUserInfoRepository();
+        viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
+            if (userInfo != null) {
+                userHouseholdId = userInfo.getHouseholdId();
+                userName = userInfo.getName();
+                userPhone = userInfo.getPhone();
+
+                viewModel.initHouseholdRepository(userHouseholdId);
+            }
+        });
+    }
+
+    private void observeHousehold() {
+        if (viewModel.getHousehold() == null) {
+            Navigation.findNavController(root).navigate(R.id.nav_join_create);
+        } else {
+            viewModel.getHousehold().observe(getViewLifecycleOwner(), household -> {
+                if (household != null) {
+                    householdCreator = household.getCreator();
+                    householdName = household.getName();
+                    householdMemberList = household.getMembers();
+                    householdMemberList = householdMemberList == null ? new ArrayList<>() : householdMemberList;
+                    householdShoppingItemList = household.getShoppinglist();
+                    householdShoppingItemList = householdShoppingItemList == null ? new ArrayList<>() : householdShoppingItemList;
+                    householdHistoryItemList = household.getHistoryItemList();
+                    householdHistoryItemList = householdHistoryItemList == null ? new ArrayList<>() : householdHistoryItemList;
+
+                    // update shoppingItemAdapter::setShoppingItemList
+                    historyAdapter.setHistoryItems(householdHistoryItemList);
+                }
+            });
+        }
+    }
+
+    private void setupDeleteFab() {
         binding.historyFab.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(getContext().getString(R.string.history_delete_all_text));
@@ -60,7 +130,8 @@ public class HistoryFragment extends Fragment {
                             builder.setPositiveButton(R.string.history_delete_yes_goddamn, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
-                                    viewModel.deleteHistory();
+                                    Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, new ArrayList<HistoryItem>());
+                                    viewModel.saveHousehold(household);
                                 }
                             });
                             AlertDialog dialog = builder.create();
@@ -74,13 +145,5 @@ public class HistoryFragment extends Fragment {
             AlertDialog dialog = builder.create();
             dialog.show();
         });
-
-        return root;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
     }
 }

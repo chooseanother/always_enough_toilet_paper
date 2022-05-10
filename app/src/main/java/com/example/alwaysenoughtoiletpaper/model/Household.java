@@ -7,15 +7,17 @@ public class Household {
     private String creator;
     private List<HouseholdMember> members;
     private List<ShoppingItem> shoppinglist;
+    private List<HistoryItem> historyItemList;
 
     public Household() {
     }
 
-    public Household(String name, String creator, List<HouseholdMember> members, List<ShoppingItem> shoppinglist) {
+    public Household(String name, String creator, List<HouseholdMember> members, List<ShoppingItem> shoppinglist, List<HistoryItem> historyItemList) {
         this.name = name;
         this.members = members;
         this.shoppinglist = shoppinglist;
         this.creator = creator;
+        this.historyItemList = historyItemList;
     }
 
     public String getName() {
@@ -48,5 +50,13 @@ public class Household {
 
     public void setCreator(String creator) {
         this.creator = creator;
+    }
+
+    public List<HistoryItem> getHistoryItemList() {
+        return historyItemList;
+    }
+
+    public void setHistoryItemList(List<HistoryItem> historyItemList) {
+        this.historyItemList = historyItemList;
     }
 }
