@@ -7,40 +7,86 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentMembersBinding;
+import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
+import com.example.alwaysenoughtoiletpaper.model.Member;
+import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.adapter.MemberAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MembersFragment extends Fragment {
     private MemberAdapter memberAdapter;
     private RecyclerView membersList;
     private FragmentMembersBinding binding;
+    private MembersViewModel viewModel;
+    private View root;
+
+    private List<Member> membersNamesPhones;
+
+    private String userName;
+    private String userPhone;
+    private String householdName;
+    private String householdCode;
+    private String householdCreatorId;
+    private List<HouseholdMember> members;
+    private List<ShoppingItem> shoppingList;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        MembersViewModel membersViewModel =
+        viewModel =
                 new ViewModelProvider(this).get(MembersViewModel.class);
 
         binding = FragmentMembersBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+        root = binding.getRoot();
+        membersNamesPhones = new ArrayList<>();
 
         // Setup recycler view
         membersList = binding.membersRV;
         membersList.hasFixedSize();
         membersList.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
-        // Setup adapter
-        memberAdapter = new MemberAdapter(membersViewModel.getMembers().getValue());
+        initUserInfo();
+        initHousehold();
+
+        setupMemberAdapter();
+
+        membersList.setAdapter(memberAdapter);
+
+        viewModel.getCurrentHousehold().observe(getViewLifecycleOwner(), household -> {
+
+        });
+
+
+        return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+    private void setupMemberAdapter(){
+
+        //TODO set up so that I get information about all the other members
+
+        memberAdapter = new MemberAdapter(membersNamesPhones);
         // TODO is this proper handling of onclick listener, should it call a method in the view model?
-        memberAdapter.setOnClickListener((member, index, delete) -> {
+        /*memberAdapter.setOnClickListener((member, index, delete) -> {
             if (delete){
                 Toast.makeText(root.getContext(), "Delete: " + member.getName(), Toast.LENGTH_SHORT).show();
             } else {
@@ -50,18 +96,44 @@ public class MembersFragment extends Fragment {
                 Toast.makeText(root.getContext(), R.string.members_copied_phone_number, Toast.LENGTH_SHORT).show();
 
             }
-        });
-
-        membersViewModel.getMembers().observe(getViewLifecycleOwner(), memberAdapter::setMembers);
-
-        membersList.setAdapter(memberAdapter);
-
-        return root;
+        });*/
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    private void initUserInfo(){
+        viewModel.init();
+        viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
+            if (userInfo != null) {
+                householdCode = userInfo.getHouseholdId();
+                userName = userInfo.getName();
+                userPhone = userInfo.getPhone();
+                membersNamesPhones.add(new Member(userName, userPhone));
+                memberAdapter.setMembers(membersNamesPhones);
+                viewModel.initHouseHoldRepository(householdCode);
+            }
+        });
+    }
+
+    private void initHousehold(){
+        if(viewModel.getCurrentHousehold() == null){
+            Navigation.findNavController(root).navigate(R.id.nav_join_create);
+        }
+        else {
+            viewModel.getCurrentHousehold().observe(getViewLifecycleOwner(), household -> {
+                if (household != null) {
+                    householdName = household.getName();
+                    householdCreatorId = household.getCreator();
+                    if (household.getMembers() == null) {
+                        members = new ArrayList<>();
+                    } else {
+                        members = household.getMembers();
+                    }
+                    if (household.getShoppinglist() == null) {
+                        shoppingList = new ArrayList<>();
+                    } else {
+                        shoppingList = household.getShoppinglist();
+                    }
+                }
+            });
+        }
     }
 }
