@@ -74,7 +74,7 @@ public class SettingsViewModel extends AndroidViewModel {
         //save user info
         userInfoRepository.saveUserInfo(householdAndUser.getUserName(), householdAndUser.getPhone(), householdAndUser.getHouseholdId());
         //save household info
-        householdRepository.saveHousehold(new Household(householdAndUser.getHouseholdName(), householdAndUser.getCreator(), householdAndUser.getMembers(), householdAndUser.getShoppinglist()));
+        householdRepository.saveHousehold(new Household(householdAndUser.getHouseholdName(), householdAndUser.getCreator(), householdAndUser.getMembers(), householdAndUser.getShoppinglist(), householdAndUser.getHistoryItemList()));
     }
 
     //currently logged in user Uid
@@ -94,7 +94,7 @@ public class SettingsViewModel extends AndroidViewModel {
             }
         }
         //save changes in database
-        householdRepository.saveHousehold(new Household(householdAndUser.getHouseholdName(), householdAndUser.getCreator(), newMembers, householdAndUser.getShoppinglist()));
+        householdRepository.saveHousehold(new Household(householdAndUser.getHouseholdName(), householdAndUser.getCreator(), newMembers, householdAndUser.getShoppinglist(), householdAndUser.getHistoryItemList()));
 
         //remove the household from the member
         userInfoRepository.saveUserInfo(householdAndUser.getUserName(), householdAndUser.getPhone(), "");
@@ -121,7 +121,7 @@ public class SettingsViewModel extends AndroidViewModel {
             //set the creator of household to a random person
             String newCreator = newMembers.get(0).getUid();
             //save changes in database
-            householdRepository.saveHousehold(new Household(householdAndUser.getHouseholdName(), newCreator, newMembers, householdAndUser.getShoppinglist()));
+            householdRepository.saveHousehold(new Household(householdAndUser.getHouseholdName(), newCreator, newMembers, householdAndUser.getShoppinglist(), householdAndUser.getHistoryItemList()));
         }
 
         //remove the household from the member

@@ -1,40 +1,58 @@
 package com.example.alwaysenoughtoiletpaper.ui.history;
 
+import android.app.Application;
+
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.alwaysenoughtoiletpaper.data.HouseholdRepository;
+import com.example.alwaysenoughtoiletpaper.data.UserInfoRepository;
+import com.example.alwaysenoughtoiletpaper.data.UserRepository;
 import com.example.alwaysenoughtoiletpaper.model.HistoryItem;
+import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.Member;
+import com.example.alwaysenoughtoiletpaper.model.UserInfo;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryViewModel extends ViewModel {
-     private MutableLiveData<List<HistoryItem>> history;
+public class HistoryViewModel extends AndroidViewModel {
+    private UserRepository userRepository;
+    private UserInfoRepository userInfoRepository;
+    private HouseholdRepository householdRepository;
 
-    public HistoryViewModel() {
-        PopulateHistory();
+    public HistoryViewModel(Application application) {
+        super(application);
+        userRepository = UserRepository.getInstance(application);
+        userInfoRepository = UserInfoRepository.getInstance();
+        householdRepository = HouseholdRepository.getInstance();
     }
 
-    public LiveData<List<HistoryItem>> getHistory() {
-        return history;
+    public void initUserInfoRepository(){
+        String userId = userRepository.getCurrentUser().getValue().getUid();
+        userInfoRepository.init(userId);
     }
 
-    private void PopulateHistory(){
-        history = new MutableLiveData<>();
-        List<HistoryItem> testHistory = new ArrayList<>();
-        testHistory.add(new HistoryItem("Maggie","Bread"));
-        testHistory.add(new HistoryItem("Maggie","Eggs"));
-        testHistory.add(new HistoryItem("Kim","Butter"));
-        testHistory.add(new HistoryItem("Kim","Cucumber"));
-        testHistory.add(new HistoryItem("Maggie","Superglue"));
-        testHistory.add(new HistoryItem("Kim","Napkins"));
-
-        history.setValue(testHistory);
+    public void initHouseholdRepository(String householdId){
+        householdRepository.init(householdId);
     }
 
-    public void deleteHistory(){
-        history.setValue(new ArrayList<>());
+    public LiveData<FirebaseUser> getCurrentUser(){
+        return userRepository.getCurrentUser();
+    }
+
+    public LiveData<UserInfo> getCurrentUserInfo(){
+        return userInfoRepository.getUserInfo();
+    }
+
+    public LiveData<Household> getHousehold(){
+        return householdRepository.getCurrentHousehold();
+    }
+
+    public void saveHousehold(Household household){
+        householdRepository.saveHousehold(household);
     }
 }

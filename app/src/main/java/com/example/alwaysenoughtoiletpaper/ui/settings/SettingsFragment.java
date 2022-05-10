@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.data.SharedPreferencesRepository;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentSettingsBinding;
+import com.example.alwaysenoughtoiletpaper.model.HistoryItem;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdAndUser;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
@@ -46,6 +47,7 @@ public class SettingsFragment extends Fragment {
     private String householdCreatorId;
     private List<HouseholdMember> members;
     private List<ShoppingItem> shoppingList;
+    private List<HistoryItem> householdHistoryItemList = new ArrayList<>();
 
 
     @Override
@@ -134,6 +136,11 @@ public class SettingsFragment extends Fragment {
                     } else {
                         shoppingList = household.getShoppinglist();
                     }
+
+                    householdHistoryItemList = household.getHistoryItemList();
+                    householdHistoryItemList = householdHistoryItemList == null ? new ArrayList<>() : householdHistoryItemList;
+
+
                     //set up values in the fragment
                     householdNameET = binding.settingsHouseholdName;
                     householdNameET.setText(householdName);
@@ -146,7 +153,7 @@ public class SettingsFragment extends Fragment {
 
     private void saveButton(){
         binding.settingsSaveButton.setOnClickListener(view -> {
-            HouseholdAndUser saveChanges = new HouseholdAndUser(userNameET.getText().toString(), userPhoneET.getText().toString(), householdCode, householdNameET.getText().toString(), householdCreatorId, members, shoppingList);
+            HouseholdAndUser saveChanges = new HouseholdAndUser(userNameET.getText().toString(), userPhoneET.getText().toString(), householdCode, householdNameET.getText().toString(), householdCreatorId, members, shoppingList, householdHistoryItemList);
             viewModel.saveChanges(saveChanges);
             Toast.makeText(getActivity().getApplicationContext(), R.string.changes_saved, Toast.LENGTH_SHORT).show();
         });
@@ -170,7 +177,7 @@ public class SettingsFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(getContext().getString(R.string.settings_leave_admin_household_dialogue)).setTitle(R.string.settings_leave_household_as_admin);
             builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) ->  {
-                viewModel.leaveHouseholdAsAdmin(new HouseholdAndUser(viewModel.getCurrentUserId().getValue().getUid().toString(), userName, userPhone, householdCode, householdName, householdCreatorId, members, shoppingList));
+                viewModel.leaveHouseholdAsAdmin(new HouseholdAndUser(viewModel.getCurrentUserId().getValue().getUid().toString(), userName, userPhone, householdCode, householdName, householdCreatorId, members, shoppingList, householdHistoryItemList));
                 Navigation.findNavController(root).navigate(R.id.nav_join_create);
             });
             AlertDialog dialog = builder.create();
@@ -180,7 +187,7 @@ public class SettingsFragment extends Fragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(getContext().getString(R.string.settings_leave_household_dialogue)).setTitle(R.string.settings_leave_household);
             builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) ->  {
-                viewModel.leaveHousehold(new HouseholdAndUser(viewModel.getCurrentUserId().getValue().getUid().toString(), userName, userPhone, householdCode, householdName, householdCreatorId, members, shoppingList));
+                viewModel.leaveHousehold(new HouseholdAndUser(viewModel.getCurrentUserId().getValue().getUid().toString(), userName, userPhone, householdCode, householdName, householdCreatorId, members, shoppingList, householdHistoryItemList));
                 Navigation.findNavController(root).navigate(R.id.nav_join_create);
             });
             AlertDialog dialog = builder.create();

@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentJoinCreateHouseholdBinding;
+import com.example.alwaysenoughtoiletpaper.model.HistoryItem;
 import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
@@ -106,7 +107,8 @@ public class JoinCreateHouseholdFragment extends Fragment {
             members.add(new HouseholdMember(creator));
 
             List<ShoppingItem> shoppinglist = new ArrayList<>();
-            viewModel.createHouseHold(new Household(name,creator,members,shoppinglist));
+            List<HistoryItem> historyItemList = new ArrayList<>();
+            viewModel.createHouseHold(new Household(name,creator,members,shoppinglist, historyItemList));
 
             //add householdId to current user
             viewModel.addHouseholdId(new UserInfo(userName, userPhone, householdId.toString()));
@@ -147,10 +149,12 @@ public class JoinCreateHouseholdFragment extends Fragment {
                     members.add(new HouseholdMember(currentUserId));
                     List<ShoppingItem> shoppinglist = household.getShoppinglist();
                     shoppinglist = shoppinglist == null ? new ArrayList<>() : shoppinglist;
+                    List<HistoryItem> historyItemList = new ArrayList<>();
+                    historyItemList = historyItemList == null ? new ArrayList<>() : historyItemList;
 
                     if (!skip) {
                         // save updated household info
-                        viewModel.saveHousehold(new Household(name, creator, members, shoppinglist));
+                        viewModel.saveHousehold(new Household(name, creator, members, shoppinglist,historyItemList));
                     }
 
                     //add householdId to current user

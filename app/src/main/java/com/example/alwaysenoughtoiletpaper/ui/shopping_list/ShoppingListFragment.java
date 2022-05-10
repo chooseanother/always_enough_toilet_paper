@@ -13,11 +13,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentShoppingListBinding;
+import com.example.alwaysenoughtoiletpaper.model.HistoryItem;
 import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
@@ -39,6 +41,7 @@ public class ShoppingListFragment extends Fragment {
     private String householdName;
     private List<HouseholdMember> householdMemberList = new ArrayList<>();
     private List<ShoppingItem> householdShoppingItemList = new ArrayList<>();
+    private List<HistoryItem> householdHistoryItemList = new ArrayList<>();
 
     // save userInfo when it is observer
     private String userName;
@@ -71,6 +74,10 @@ public class ShoppingListFragment extends Fragment {
 
         setupFab();
 
+        viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
+            userName = userInfo.getName();
+            userPhone = userInfo.getPhone();
+        });
 
         setupBoughtButton();
 
@@ -107,7 +114,7 @@ public class ShoppingListFragment extends Fragment {
                 builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, i) -> {
 
                     householdShoppingItemList.remove(item);
-                    Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList);
+                    Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, householdHistoryItemList);
                     viewModel.updateHousehold(household);
                     viewModel.clearTicked();
                 });
@@ -133,7 +140,7 @@ public class ShoppingListFragment extends Fragment {
 //                viewModel.addItem(new ShoppingItem(text));
                 ShoppingItem shoppingItem = new ShoppingItem(text);
                 householdShoppingItemList.add(shoppingItem);
-                Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList);
+                Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, householdHistoryItemList);
                 viewModel.updateHousehold(household);
             });
 
@@ -148,12 +155,11 @@ public class ShoppingListFragment extends Fragment {
             builder.setMessage(getContext().getString(R.string.shopping_list_bought_dailogue));
             builder.setPositiveButton(R.string.shopping_list_yes_button, (dialogInterface, item) -> {
                 List<ShoppingItem> tickItems = viewModel.getTickedItems();
-                List<ShoppingItem> historyList = new ArrayList<>();
                 for (ShoppingItem shoppingItem : tickItems) {
-                    historyList.add(shoppingItem);
+                    householdHistoryItemList.add(new HistoryItem(userName, shoppingItem.getName()));
                     householdShoppingItemList.remove(shoppingItem);
                 }
-                Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList);
+                Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, householdHistoryItemList);
                 viewModel.updateHousehold(household);
                 viewModel.clearTicked();
             });
@@ -163,13 +169,9 @@ public class ShoppingListFragment extends Fragment {
     }
 
     private void observeChanges() {
-        viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
-            userName = userInfo.getName();
-            userPhone = userInfo.getPhone();
-            userHouseholdId = userInfo.getHouseholdId();
-
-            viewModel.initHouseholdRepository(userHouseholdId);
-
+        if(viewModel.getHousehold() == null){
+            Navigation.findNavController(root).navigate(R.id.nav_join_create);
+        } else {
             viewModel.getHousehold().observe(getViewLifecycleOwner(), household -> {
                 householdCreator = household.getCreator();
                 householdName = household.getName();
@@ -177,17 +179,20 @@ public class ShoppingListFragment extends Fragment {
                 householdMemberList = householdMemberList == null ? new ArrayList<>() : householdMemberList;
                 householdShoppingItemList = household.getShoppinglist();
                 householdShoppingItemList = householdShoppingItemList == null ? new ArrayList<>() : householdShoppingItemList;
+                householdHistoryItemList = household.getHistoryItemList();
+                householdHistoryItemList = householdHistoryItemList == null ? new ArrayList<>() : householdHistoryItemList;
+
 
                 // update shoppingItemAdapter::setShoppingItemList
                 shoppingItemAdapter.setShoppingItemList(householdShoppingItemList);
 
-                if(householdShoppingItemList == null){
+                if (householdShoppingItemList == null) {
                     boughtButton.setVisibility(View.INVISIBLE);
                 } else {
                     boughtButton.setVisibility(View.VISIBLE);
                 }
             });
-        });
+        }
     }
 }
 
