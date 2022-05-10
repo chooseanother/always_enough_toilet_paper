@@ -1,28 +1,64 @@
 package com.example.alwaysenoughtoiletpaper.ui.members;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.alwaysenoughtoiletpaper.data.HouseholdRepository;
+import com.example.alwaysenoughtoiletpaper.data.UserInfoRepository;
+import com.example.alwaysenoughtoiletpaper.data.UserRepository;
+import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.Member;
+import com.example.alwaysenoughtoiletpaper.model.UserInfo;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MembersViewModel extends ViewModel {
-    // TODO Implement repository that gets data
-    private MutableLiveData<List<Member>> members;
+public class MembersViewModel extends AndroidViewModel {
+    private final UserRepository userRepository;
+    //private MutableLiveData<List<Member>> members;
+    private HouseholdRepository householdRepository;
+    private UserInfoRepository userInfoRepository;
 
-    public MembersViewModel() {
-        PopulateMembers();
+    public MembersViewModel(@NonNull Application application) {
+        super(application);
+        userRepository = UserRepository.getInstance(application);
+        householdRepository = HouseholdRepository.getInstance();
+        userInfoRepository = UserInfoRepository.getInstance();
+        //members = new MutableLiveData<>();
+        //PopulateMembers();
     }
 
-    public LiveData<List<Member>> getMembers() {
-        return members;
+    public void init(){
+        String userId = userRepository.getCurrentUser().getValue().getUid();
+        userInfoRepository.init(userId);
     }
 
-    private void PopulateMembers(){
-        members = new MutableLiveData<>();
+    public void initHouseHoldRepository(String householdId){
+        if (householdId != null && !householdId.equals("")){
+            householdRepository.init(householdId);
+        }
+    }
+
+
+    public LiveData<FirebaseUser> getCurrentUser(){
+        return userRepository.getCurrentUser();
+    }
+
+    public LiveData<UserInfo> getCurrentUserInfo(){
+        return userInfoRepository.getUserInfo();
+    }
+
+    public LiveData<Household> getCurrentHousehold(){
+        return householdRepository.getCurrentHousehold();
+    }
+
+    /*private void PopulateMembers(){
         List<Member> testMembers = new ArrayList<>();
         testMembers.add(new Member("Kim Tranberg long long long long long long name","+4512345678"));
         testMembers.add(new Member("Markéta Lapčíková","+4587654321"));
@@ -37,5 +73,7 @@ public class MembersViewModel extends ViewModel {
         testMembers.add(new Member("Deleniti Facere","+4556655656"));
 
         members.setValue(testMembers);
-    }
+    }*/
+
+
 }

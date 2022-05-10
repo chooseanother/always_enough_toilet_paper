@@ -56,6 +56,7 @@ public class SettingsFragment extends Fragment {
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
         root = binding.getRoot();
         viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
+
         setCopyHouseholdCode();
         initPreferences();
 
@@ -114,7 +115,6 @@ public class SettingsFragment extends Fragment {
                 userPhoneET.setText(userPhone);
             }
         });
-
     }
 
     private void initHousehold(){
