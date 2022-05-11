@@ -144,7 +144,7 @@ public class MembersFragment extends Fragment {
                             membersNamesPhones.add(member);
                         }
                         for (Member member1:membersNamesPhones) {
-                            if(!member1.getName().equals(member.getName()) && !member1.getPhoneNumber().equals(member.getPhoneNumber())){
+                            if(!member1.getUid().equals(member.getUid())){
                                 membersNamesPhones.add(member);
                             }
                         }
