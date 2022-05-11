@@ -2,10 +2,13 @@ package com.example.alwaysenoughtoiletpaper.model;
 
 import android.util.Log;
 
+import com.google.firebase.database.Exclude;
+
 public class UserInfo {
     private String name;
     private String phone;
     private String householdId;
+    @Exclude
     private String uid;
 
     public UserInfo() {
@@ -42,7 +45,7 @@ public class UserInfo {
     }
 
     public String getUid() {
-        Log.d("memberGetUid", uid);
+        Log.d("memberGetUid", ""+uid);
         return uid;
     }
 
