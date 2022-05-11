@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alwaysenoughtoiletpaper.R;
+import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.Member;
 
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder> {
     private List<Member> members;
     private OnClickListener listener;
+    private String ownerUid;
 
     public MemberAdapter(List<Member> members) {
         this.members = members;
@@ -37,11 +39,19 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
         holder.memberName.setText(member.getName());
         holder.memberPhone.setText(member.getPhoneNumber());
         // TODO only show owner icon next to household owner
+        holder.owner.setVisibility(View.INVISIBLE);
+        if (member.getUid()!=null) {
+            if (member.getUid().equals(ownerUid)) {
+                holder.owner.setVisibility(View.VISIBLE);
+            }
+        }
         // TODO only show delete icon next to member when household owner views the list
+        holder.delete.setVisibility(View.INVISIBLE);
     }
 
-    public void setMembers(List<Member> members) {
+    public void setMembers(List<Member> members, String householdCreatorId) {
         this.members = members;
+        ownerUid = householdCreatorId;
         notifyDataSetChanged();
     }
 
@@ -73,9 +83,9 @@ public class MemberAdapter extends RecyclerView.Adapter<MemberAdapter.ViewHolder
                 listener.OnClick(members.get(getBindingAdapterPosition()),getBindingAdapterPosition(),false);
             });
             // TODO set onclick listener for delete
-            delete.setOnClickListener(view -> {
+/*            delete.setOnClickListener(view -> {
                 listener.OnClick(members.get(getBindingAdapterPosition()),getBindingAdapterPosition(),true);
-            });
+            });*/
         }
     }
 

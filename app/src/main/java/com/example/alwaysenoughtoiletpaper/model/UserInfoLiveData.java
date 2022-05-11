@@ -17,6 +17,9 @@ public class UserInfoLiveData extends LiveData<UserInfo> {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
             UserInfo userInfo = snapshot.getValue(UserInfo.class);
+            String uid = snapshot.getKey();
+            Log.d("memberUid", uid);
+            userInfo.setUid(uid);
             setValue(userInfo);
         }
 

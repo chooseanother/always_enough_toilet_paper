@@ -1,9 +1,12 @@
 package com.example.alwaysenoughtoiletpaper.model;
 
+import android.util.Log;
+
 public class UserInfo {
     private String name;
     private String phone;
     private String householdId;
+    private String uid;
 
     public UserInfo() {
     }
@@ -36,5 +39,15 @@ public class UserInfo {
 
     public void setHouseholdId(String householdId) {
         this.householdId = householdId;
+    }
+
+    public String getUid() {
+        Log.d("memberGetUid", uid);
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        Log.d("memberSetUid", uid);
+        this.uid = uid;
     }
 }

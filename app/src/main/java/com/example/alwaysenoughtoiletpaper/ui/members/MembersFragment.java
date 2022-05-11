@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,8 @@ import com.example.alwaysenoughtoiletpaper.databinding.FragmentMembersBinding;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.Member;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
+import com.example.alwaysenoughtoiletpaper.model.UserInfoLiveData;
+import com.example.alwaysenoughtoiletpaper.model.UserLiveData;
 import com.example.alwaysenoughtoiletpaper.model.adapter.MemberAdapter;
 
 import java.util.ArrayList;
@@ -55,21 +58,10 @@ public class MembersFragment extends Fragment {
         membersNamesPhones = new ArrayList<>();
 
         // Setup recycler view
-        membersList = binding.membersRV;
-        membersList.hasFixedSize();
-        membersList.setLayoutManager(new LinearLayoutManager(root.getContext()));
+        setupRecyclerView();
 
         initUserInfo();
         initHousehold();
-
-        setupMemberAdapter();
-
-        membersList.setAdapter(memberAdapter);
-
-        viewModel.getCurrentHousehold().observe(getViewLifecycleOwner(), household -> {
-
-        });
-
 
         return root;
     }
@@ -80,13 +72,17 @@ public class MembersFragment extends Fragment {
         binding = null;
     }
 
-    private void setupMemberAdapter(){
+    private void setupRecyclerView(){
 
         //TODO set up so that I get information about all the other members
+        membersList = binding.membersRV;
+        membersList.hasFixedSize();
+        membersList.setLayoutManager(new LinearLayoutManager(root.getContext()));
+        memberAdapter = new MemberAdapter(new ArrayList<>());
+        membersList.setAdapter(memberAdapter);
 
-        memberAdapter = new MemberAdapter(membersNamesPhones);
         // TODO is this proper handling of onclick listener, should it call a method in the view model?
-        /*memberAdapter.setOnClickListener((member, index, delete) -> {
+        memberAdapter.setOnClickListener((member, index, delete) -> {
             if (delete){
                 Toast.makeText(root.getContext(), "Delete: " + member.getName(), Toast.LENGTH_SHORT).show();
             } else {
@@ -96,7 +92,7 @@ public class MembersFragment extends Fragment {
                 Toast.makeText(root.getContext(), R.string.members_copied_phone_number, Toast.LENGTH_SHORT).show();
 
             }
-        });*/
+        });
     }
 
     private void initUserInfo(){
@@ -106,8 +102,6 @@ public class MembersFragment extends Fragment {
                 householdCode = userInfo.getHouseholdId();
                 userName = userInfo.getName();
                 userPhone = userInfo.getPhone();
-                membersNamesPhones.add(new Member(userName, userPhone));
-                memberAdapter.setMembers(membersNamesPhones);
                 viewModel.initHouseHoldRepository(householdCode);
             }
         });
@@ -132,6 +126,31 @@ public class MembersFragment extends Fragment {
                     } else {
                         shoppingList = household.getShoppinglist();
                     }
+                }
+
+                List<UserInfoLiveData> userLiveDataList = viewModel.initGetMembersUserInfo(members);
+
+                membersNamesPhones = new ArrayList<>();
+
+                for (HouseholdMember member : members) {
+                    Log.d("memberList", member.getUid());
+                }
+
+                for (UserInfoLiveData userInfo : userLiveDataList) {
+                    userInfo.observe(getViewLifecycleOwner(), userInfoLocal -> {
+                        Log.d("memberObserve", userInfoLocal.getUid());
+                        Member member = new Member(userInfoLocal.getName(), userInfoLocal.getPhone(), userInfoLocal.getUid());
+                        if (membersNamesPhones.isEmpty()){
+                            membersNamesPhones.add(member);
+                        }
+                        for (Member member1:membersNamesPhones) {
+                            if(!member1.getName().equals(member.getName()) && !member1.getPhoneNumber().equals(member.getPhoneNumber())){
+                                membersNamesPhones.add(member);
+                            }
+                        }
+
+                        memberAdapter.setMembers(membersNamesPhones, householdCreatorId);
+                    });
                 }
             });
         }
