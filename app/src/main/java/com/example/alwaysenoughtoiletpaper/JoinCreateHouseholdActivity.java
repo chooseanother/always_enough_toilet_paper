@@ -1,20 +1,19 @@
-package com.example.alwaysenoughtoiletpaper.ui.joincreate;
+package com.example.alwaysenoughtoiletpaper;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.alwaysenoughtoiletpaper.R;
-import com.example.alwaysenoughtoiletpaper.databinding.FragmentJoinCreateHouseholdBinding;
+import com.example.alwaysenoughtoiletpaper.databinding.ActivityJoinCreateHouseholdBinding;
 import com.example.alwaysenoughtoiletpaper.model.HistoryItem;
 import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
@@ -25,24 +24,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class JoinCreateHouseholdFragment extends Fragment {
+public class JoinCreateHouseholdActivity extends AppCompatActivity {
     private View root;
     private Button helpButton;
     private JoinCreateHouseholdViewModel viewModel;
-    private FragmentJoinCreateHouseholdBinding binding;
+    private ActivityJoinCreateHouseholdBinding binding;
 
 
     private String userName;
     private String userPhone;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        binding = FragmentJoinCreateHouseholdBinding.inflate(inflater, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d("JoinCreate", "onCreate called");
+        binding = ActivityJoinCreateHouseholdBinding.inflate(getLayoutInflater());
         root = binding.getRoot();
+        setContentView(root);
+
         helpButton = binding.buttonQuestionMark;
         viewModel = new ViewModelProvider(this).get(JoinCreateHouseholdViewModel.class);
-        viewModel.init();
+        //viewModel.init();
 
         // check if user has a household
 //        checkIfUserIsInAHousehold();
@@ -55,7 +57,7 @@ public class JoinCreateHouseholdFragment extends Fragment {
         // Setup join button
         setupJoinButton();
 
-        viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
+        viewModel.getCurrentUserInfo().observe(this, userInfo -> {
             // pass info to view model to initiate household repository
             if (userInfo != null) {
                 String householdId = userInfo.getHouseholdId();
@@ -65,7 +67,6 @@ public class JoinCreateHouseholdFragment extends Fragment {
             }
         });
 
-        return root;
     }
 
     public void checkIfUserIsInAHousehold(String householdId){
@@ -73,21 +74,15 @@ public class JoinCreateHouseholdFragment extends Fragment {
             if(!householdId.equals("")){
                 viewModel.initHouseHoldRepository(householdId);
                 //Navigate to shopping list
-                Navigation.findNavController(root).navigate(R.id.nav_shopping_list);
+                startActivity(new Intent(JoinCreateHouseholdActivity.this, MainActivity.class));
             }
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
     private void setupHelpButton(){
         helpButton.setOnClickListener(view -> {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(getContext().getString(R.string.household_code_help_text)).setTitle(R.string.household_code_help_title);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.household_code_help_text).setTitle(R.string.household_code_help_title);
             AlertDialog dialog = builder.create();
             dialog.show();
         });
@@ -127,9 +122,9 @@ public class JoinCreateHouseholdFragment extends Fragment {
             // check if household exists with that id
             viewModel.initHouseHoldRepository(householdId);
 
-            viewModel.getCurrentHousehold().observe(getViewLifecycleOwner(), household -> {
+            viewModel.getCurrentHousehold().observe(this, household -> {
                 if (household == null){
-                    Toast.makeText(getContext(), "Household does not exist", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Household does not exist", Toast.LENGTH_SHORT).show();
                 } else {
                     String currentUserId = viewModel.getCurrentUser().getValue().getUid();
                     String name = household.getName();

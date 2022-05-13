@@ -1,6 +1,7 @@
 package com.example.alwaysenoughtoiletpaper.ui.shopping_list;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.alwaysenoughtoiletpaper.JoinCreateHouseholdActivity;
 import com.example.alwaysenoughtoiletpaper.R;
 import com.example.alwaysenoughtoiletpaper.databinding.FragmentShoppingListBinding;
 import com.example.alwaysenoughtoiletpaper.model.HistoryItem;
@@ -75,6 +77,7 @@ public class ShoppingListFragment extends Fragment {
         setupFab();
 
         viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
+            userHouseholdId = userInfo.getHouseholdId();
             userName = userInfo.getName();
             userPhone = userInfo.getPhone();
         });
@@ -169,27 +172,34 @@ public class ShoppingListFragment extends Fragment {
     }
 
     private void observeChanges() {
-        if(viewModel.getHousehold() == null){
-            Navigation.findNavController(root).navigate(R.id.nav_join_create);
+//        if(viewModel.getHousehold() == null){
+//
+//        }
+        if (userHouseholdId == null){
+
+        } else if(userHouseholdId.equals("")){
+            startActivity(new Intent(getContext(), JoinCreateHouseholdActivity.class));
         } else {
             viewModel.getHousehold().observe(getViewLifecycleOwner(), household -> {
-                householdCreator = household.getCreator();
-                householdName = household.getName();
-                householdMemberList = household.getMembers();
-                householdMemberList = householdMemberList == null ? new ArrayList<>() : householdMemberList;
-                householdShoppingItemList = household.getShoppinglist();
-                householdShoppingItemList = householdShoppingItemList == null ? new ArrayList<>() : householdShoppingItemList;
-                householdHistoryItemList = household.getHistoryItemList();
-                householdHistoryItemList = householdHistoryItemList == null ? new ArrayList<>() : householdHistoryItemList;
+                if (household != null) {
+                    householdCreator = household.getCreator();
+                    householdName = household.getName();
+                    householdMemberList = household.getMembers();
+                    householdMemberList = householdMemberList == null ? new ArrayList<>() : householdMemberList;
+                    householdShoppingItemList = household.getShoppinglist();
+                    householdShoppingItemList = householdShoppingItemList == null ? new ArrayList<>() : householdShoppingItemList;
+                    householdHistoryItemList = household.getHistoryItemList();
+                    householdHistoryItemList = householdHistoryItemList == null ? new ArrayList<>() : householdHistoryItemList;
 
 
-                // update shoppingItemAdapter::setShoppingItemList
-                shoppingItemAdapter.setShoppingItemList(householdShoppingItemList);
+                    // update shoppingItemAdapter::setShoppingItemList
+                    shoppingItemAdapter.setShoppingItemList(householdShoppingItemList);
 
-                if (householdShoppingItemList == null) {
-                    boughtButton.setVisibility(View.INVISIBLE);
-                } else {
-                    boughtButton.setVisibility(View.VISIBLE);
+                    if (householdShoppingItemList == null) {
+                        boughtButton.setVisibility(View.INVISIBLE);
+                    } else {
+                        boughtButton.setVisibility(View.VISIBLE);
+                    }
                 }
             });
         }

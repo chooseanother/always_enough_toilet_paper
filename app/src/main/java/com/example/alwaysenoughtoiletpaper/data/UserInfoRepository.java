@@ -1,5 +1,7 @@
 package com.example.alwaysenoughtoiletpaper.data;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.UserInfo;
 import com.example.alwaysenoughtoiletpaper.model.UserInfoLiveData;
@@ -13,7 +15,7 @@ public class UserInfoRepository {
     private static UserInfoRepository instance;
     private DatabaseReference dbRef;
     private UserInfoLiveData userInfo;
-    private List<UserInfoLiveData> memberList;
+    private List<LiveData<UserInfo>> memberList;
 
     private UserInfoRepository() {
     }
@@ -29,7 +31,7 @@ public class UserInfoRepository {
         userInfo = new UserInfoLiveData(dbRef);
     }
 
-    public List<UserInfoLiveData> initHouseholdMembers(List<HouseholdMember> members){
+    public List<LiveData<UserInfo>> initHouseholdMembers(List<HouseholdMember> members){
         memberList = new ArrayList<>();
         for (HouseholdMember member : members){
             DatabaseReference memberDbRef = FirebaseDatabase.getInstance(Database.URL).getReference("users").child(member.getUid());
@@ -42,7 +44,7 @@ public class UserInfoRepository {
         dbRef.setValue(new UserInfo(name,phone,householdId));
     }
 
-    public UserInfoLiveData getUserInfo() {
+    public LiveData<UserInfo> getUserInfo() {
         return userInfo;
     }
 

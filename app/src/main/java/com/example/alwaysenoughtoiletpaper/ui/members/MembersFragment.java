@@ -3,18 +3,18 @@ package com.example.alwaysenoughtoiletpaper.ui.members;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,9 +23,10 @@ import com.example.alwaysenoughtoiletpaper.databinding.FragmentMembersBinding;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.Member;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
+import com.example.alwaysenoughtoiletpaper.model.UserInfo;
 import com.example.alwaysenoughtoiletpaper.model.UserInfoLiveData;
-import com.example.alwaysenoughtoiletpaper.model.UserLiveData;
 import com.example.alwaysenoughtoiletpaper.model.adapter.MemberAdapter;
+import com.example.alwaysenoughtoiletpaper.JoinCreateHouseholdActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +62,8 @@ public class MembersFragment extends Fragment {
         setupRecyclerView();
 
         initUserInfo();
-        initHousehold();
+
+        //initHousehold();
 
         return root;
     }
@@ -96,20 +98,27 @@ public class MembersFragment extends Fragment {
     }
 
     private void initUserInfo(){
-        viewModel.init();
+        //viewModel.init();
         viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
             if (userInfo != null) {
                 householdCode = userInfo.getHouseholdId();
                 userName = userInfo.getName();
                 userPhone = userInfo.getPhone();
                 viewModel.initHouseHoldRepository(householdCode);
+
+                initHousehold();
             }
         });
     }
 
     private void initHousehold(){
-        if(viewModel.getCurrentHousehold() == null){
-            Navigation.findNavController(root).navigate(R.id.nav_join_create);
+//        if(viewModel.getCurrentHousehold() == null){
+//            startActivity(new Intent(getContext(), JoinCreateHouseholdActivity.class));
+//        }
+        if (householdCode == null){
+
+        } else if(householdCode.equals("")){
+            startActivity(new Intent(getContext(), JoinCreateHouseholdActivity.class));
         }
         else {
             viewModel.getCurrentHousehold().observe(getViewLifecycleOwner(), household -> {
@@ -126,31 +135,32 @@ public class MembersFragment extends Fragment {
                     } else {
                         shoppingList = household.getShoppinglist();
                     }
-                }
 
-                List<UserInfoLiveData> userLiveDataList = viewModel.initGetMembersUserInfo(members);
 
-                membersNamesPhones = new ArrayList<>();
+                    List<LiveData<UserInfo>> userLiveDataList = viewModel.initGetMembersUserInfo(members);
 
-                for (HouseholdMember member : members) {
-                    Log.d("memberList", member.getUid());
-                }
+                    membersNamesPhones = new ArrayList<>();
 
-                for (UserInfoLiveData userInfo : userLiveDataList) {
-                    userInfo.observe(getViewLifecycleOwner(), userInfoLocal -> {
-                        Log.d("memberObserve", userInfoLocal.getUid());
-                        Member member = new Member(userInfoLocal.getName(), userInfoLocal.getPhone(), userInfoLocal.getUid());
-                        if (membersNamesPhones.isEmpty()){
-                            membersNamesPhones.add(member);
-                        }
-                        for (Member member1:membersNamesPhones) {
-                            if(!member1.getUid().equals(member.getUid())){
+                    for (HouseholdMember member : members) {
+                        Log.d("memberList", member.getUid());
+                    }
+
+                    for (LiveData<UserInfo> userInfo : userLiveDataList) {
+                        userInfo.observe(getViewLifecycleOwner(), userInfoLocal -> {
+                            Log.d("memberObserve", userInfoLocal.getUid());
+                            Member member = new Member(userInfoLocal.getName(), userInfoLocal.getPhone(), userInfoLocal.getUid());
+                            if (membersNamesPhones.isEmpty()){
                                 membersNamesPhones.add(member);
                             }
-                        }
+                            for (Member member1:membersNamesPhones) {
+                                if(!member1.getUid().equals(member.getUid())){
+                                    membersNamesPhones.add(member);
+                                }
+                            }
 
-                        memberAdapter.setMembers(membersNamesPhones, householdCreatorId);
-                    });
+                            memberAdapter.setMembers(membersNamesPhones, householdCreatorId);
+                        });
+                    }
                 }
             });
         }

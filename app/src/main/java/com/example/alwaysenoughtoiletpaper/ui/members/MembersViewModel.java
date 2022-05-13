@@ -47,7 +47,7 @@ public class MembersViewModel extends AndroidViewModel {
         }
     }
 
-    public List<UserInfoLiveData> initGetMembersUserInfo(List<HouseholdMember> members){
+    public List<LiveData<UserInfo>> initGetMembersUserInfo(List<HouseholdMember> members){
         return userInfoRepository.initHouseholdMembers(members);
     }
 

@@ -2,17 +2,15 @@ package com.example.alwaysenoughtoiletpaper.ui.history;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,7 +21,7 @@ import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.adapter.HistoryAdapter;
-import com.example.alwaysenoughtoiletpaper.model.adapter.MemberAdapter;
+import com.example.alwaysenoughtoiletpaper.JoinCreateHouseholdActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +65,7 @@ public class HistoryFragment extends Fragment {
         setupDeleteFab();
 
         initUserInfoAndHousehold();
-        observeHousehold();
+
 
         return root;
     }
@@ -87,13 +85,17 @@ public class HistoryFragment extends Fragment {
                 userPhone = userInfo.getPhone();
 
                 viewModel.initHouseholdRepository(userHouseholdId);
+
+                observeHousehold();
             }
         });
     }
 
     private void observeHousehold() {
-        if (viewModel.getHousehold() == null) {
-            Navigation.findNavController(root).navigate(R.id.nav_join_create);
+        if (userHouseholdId == null){
+
+        } else if(userHouseholdId.equals("")){
+            startActivity(new Intent(getContext(), JoinCreateHouseholdActivity.class));
         } else {
             viewModel.getHousehold().observe(getViewLifecycleOwner(), household -> {
                 if (household != null) {

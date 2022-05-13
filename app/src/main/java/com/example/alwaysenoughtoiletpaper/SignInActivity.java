@@ -40,8 +40,7 @@ public class SignInActivity extends AppCompatActivity {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
             // Successfully signed in
-            // navigate to mainActivity
-            goToMainActivity();
+            handleResult();
         } else {
             if (response == null){
                 Toast.makeText(this, "Sign in cancelled", Toast.LENGTH_SHORT).show();
@@ -61,13 +60,35 @@ public class SignInActivity extends AppCompatActivity {
         finish();
     }
 
+    private void goToJoinCreate(){
+        startActivity(new Intent(SignInActivity.this, JoinCreateHouseholdActivity.class));
+        finish();
+    }
+
     private void checkIfSignedIn(){
         viewModel.getCurrentUser().observe(this, user -> {
             if (user != null){
-                // navigate to mainActivity
-                goToMainActivity();
+                // handle result
+                handleResult();
             } else {
                 signIn();
+            }
+        });
+    }
+
+    private void handleResult(){
+        viewModel.initUserInfo();
+
+        viewModel.getCurrentUserInfo().observe(this, userInfo -> {
+            String householdId = userInfo.getHouseholdId();
+            Log.d("signIn", "Household "+householdId);
+            if (householdId == null){
+
+            } else if (householdId.equals("")){
+                goToJoinCreate();
+            } else {
+                // navigate to mainActivity
+                goToMainActivity();
             }
         });
     }

@@ -1,4 +1,4 @@
-package com.example.alwaysenoughtoiletpaper.ui.joincreate;
+package com.example.alwaysenoughtoiletpaper;
 
 import android.app.Application;
 import android.util.Log;
