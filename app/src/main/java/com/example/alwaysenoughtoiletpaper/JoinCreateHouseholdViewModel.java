@@ -70,4 +70,8 @@ public class JoinCreateHouseholdViewModel extends AndroidViewModel {
     public void addHouseholdId(UserInfo userInfo){
         userInfoRepository.addHouseholdId(userInfo);
     }
+
+    public void signOut(){
+        userRepository.signOut();
+    }
 }

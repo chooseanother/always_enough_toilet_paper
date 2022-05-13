@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -19,6 +20,7 @@ import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.UserInfo;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +56,14 @@ public class JoinCreateHouseholdActivity extends AppCompatActivity {
         // Setup create button
         setupCreateButton();
 
+        //
+        checkIfSignedIn();
+
         // Setup join button
         setupJoinButton();
+
+        //
+        signOutBtn();
 
         viewModel.getCurrentUserInfo().observe(this, userInfo -> {
             // pass info to view model to initiate household repository
@@ -161,5 +169,27 @@ public class JoinCreateHouseholdActivity extends AppCompatActivity {
             });
 
         });
+    }
+
+    private void signOutBtn(){
+        binding.joinCreateSignOutBtn.setOnClickListener(view -> {
+            viewModel.signOut();
+        });
+    }
+
+    private void checkIfSignedIn(){
+        LiveData<FirebaseUser> currentUser = viewModel.getCurrentUser();
+        currentUser.observe(this, user -> {
+            if (user != null){
+
+            } else {
+                startLoginActivity();
+            }
+        });
+    }
+
+    private void startLoginActivity() {
+        startActivity(new Intent(this, SignInActivity.class));
+        finish();
     }
 }
