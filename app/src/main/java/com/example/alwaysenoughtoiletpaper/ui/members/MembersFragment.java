@@ -152,6 +152,8 @@ public class MembersFragment extends Fragment {
                             if (membersNamesPhones.isEmpty()){
                                 membersNamesPhones.add(member);
                             }
+
+                            // TODO this breaks everything
                             for (Member member1:membersNamesPhones) {
                                 if(!member1.getUid().equals(member.getUid())){
                                     membersNamesPhones.add(member);
