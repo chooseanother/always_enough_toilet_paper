@@ -38,4 +38,8 @@ public class SignInActivityViewModel extends AndroidViewModel {
     public void signOut(){
         userRepository.signOut();
     }
+
+    public void saveUserInfo(String name, String phone, String householdId){
+        userInfoRepository.saveUserInfo(name, phone, householdId);
+    }
 }

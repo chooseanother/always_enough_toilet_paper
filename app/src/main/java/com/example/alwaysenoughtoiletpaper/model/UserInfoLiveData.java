@@ -19,7 +19,9 @@ public class UserInfoLiveData extends LiveData<UserInfo> {
             UserInfo userInfo = snapshot.getValue(UserInfo.class);
             String uid = snapshot.getKey();
             Log.d("memberUid", uid);
-            userInfo.setUid(uid);
+            if (userInfo != null){
+                userInfo.setUid(uid);
+            }
             setValue(userInfo);
         }
 
