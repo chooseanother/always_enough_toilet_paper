@@ -104,7 +104,7 @@ public class MembersFragment extends Fragment {
                 householdCode = userInfo.getHouseholdId();
                 userName = userInfo.getName();
                 userPhone = userInfo.getPhone();
-                viewModel.initHouseHoldRepository(householdCode);
+                //viewModel.initHouseHoldRepository(householdCode);
 
                 initHousehold();
             }

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -56,7 +57,6 @@ public class ShoppingListFragment extends Fragment {
         viewModel = new ViewModelProvider(this).get(ShoppingListViewModel.class);
         binding = FragmentShoppingListBinding.inflate(inflater, container, false);
         root = binding.getRoot();
-        viewModel.initUserInfoRepository();
 
         //Set up recycler view
         setupRecyclerView();
@@ -76,16 +76,19 @@ public class ShoppingListFragment extends Fragment {
 
         setupFab();
 
+
+
         viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
             userHouseholdId = userInfo.getHouseholdId();
             userName = userInfo.getName();
             userPhone = userInfo.getPhone();
+            // BIG BROTHER!
+            Log.d("testShopObserveUserInfo","household "+userHouseholdId+" user "+userName+" phone "+userPhone);
+            viewModel.initHouseholdRepository(userHouseholdId);
+            observeChanges();
         });
 
         setupBoughtButton();
-
-        // BIG BROTHER!
-        observeChanges();
 
         return root;
     }
@@ -139,8 +142,6 @@ public class ShoppingListFragment extends Fragment {
             builder.setView(editText);
             builder.setPositiveButton(R.string.shopping_list_add_new_item_button_ok, (dialogInterface, i) -> {
                 String text = editText.getText().toString();
-//                Toast.makeText(getActivity().getApplicationContext(), "Text: "+text, Toast.LENGTH_SHORT).show();
-//                viewModel.addItem(new ShoppingItem(text));
                 ShoppingItem shoppingItem = new ShoppingItem(text);
                 householdShoppingItemList.add(shoppingItem);
                 Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, householdHistoryItemList);
@@ -172,36 +173,31 @@ public class ShoppingListFragment extends Fragment {
     }
 
     private void observeChanges() {
-//        if(viewModel.getHousehold() == null){
-//
-//        }
         if (userHouseholdId == null){
 
         } else if(userHouseholdId.equals("")){
             startActivity(new Intent(getContext(), JoinCreateHouseholdActivity.class));
         } else {
-            viewModel.getHousehold().observe(getViewLifecycleOwner(), household -> {
-                if (household != null) {
-                    householdCreator = household.getCreator();
-                    householdName = household.getName();
-                    householdMemberList = household.getMembers();
-                    householdMemberList = householdMemberList == null ? new ArrayList<>() : householdMemberList;
-                    householdShoppingItemList = household.getShoppinglist();
-                    householdShoppingItemList = householdShoppingItemList == null ? new ArrayList<>() : householdShoppingItemList;
-                    householdHistoryItemList = household.getHistoryItemList();
-                    householdHistoryItemList = householdHistoryItemList == null ? new ArrayList<>() : householdHistoryItemList;
+            LiveData<Household> householdLiveData = viewModel.getHousehold();
+            Log.d("testShop","householdlivedata "+householdLiveData);
+            if (householdLiveData != null) {
+                householdLiveData.observe(getViewLifecycleOwner(), household -> {
+                    Log.d("testShopObserveHouse", ""+household);
+                    if (household != null) {
+                        householdCreator = household.getCreator();
+                        householdName = household.getName();
+                        householdMemberList = household.getMembers();
+                        householdMemberList = householdMemberList == null ? new ArrayList<>() : householdMemberList;
+                        householdShoppingItemList = household.getShoppinglist();
+                        householdShoppingItemList = householdShoppingItemList == null ? new ArrayList<>() : householdShoppingItemList;
+                        householdHistoryItemList = household.getHistoryItemList();
+                        householdHistoryItemList = householdHistoryItemList == null ? new ArrayList<>() : householdHistoryItemList;
 
-
-                    // update shoppingItemAdapter::setShoppingItemList
-                    shoppingItemAdapter.setShoppingItemList(householdShoppingItemList);
-
-                    if (householdShoppingItemList == null) {
-                        boughtButton.setVisibility(View.INVISIBLE);
-                    } else {
-                        boughtButton.setVisibility(View.VISIBLE);
+                        // update shoppingItemAdapter
+                        shoppingItemAdapter.setShoppingItemList(householdShoppingItemList);
                     }
-                }
-            });
+                });
+            }
         }
     }
 }

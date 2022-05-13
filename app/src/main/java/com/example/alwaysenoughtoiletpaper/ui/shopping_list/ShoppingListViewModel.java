@@ -36,7 +36,6 @@ public class ShoppingListViewModel extends AndroidViewModel {
         userInfoRepository = UserInfoRepository.getInstance();
         householdRepository = HouseholdRepository.getInstance();
         this.application = application;
-
         numberOfTicked = new MutableLiveData<>();
         numberOfTicked.setValue(0);
         tickedItems = new ArrayList<>();
@@ -52,11 +51,6 @@ public class ShoppingListViewModel extends AndroidViewModel {
 
     public LiveData<Household> getHousehold(){
         return householdRepository.getCurrentHousehold();
-    }
-
-    public void initUserInfoRepository(){
-        String userId = userRepository.getCurrentUser().getValue().getUid();
-        userInfoRepository.init(userId);
     }
 
     public void initHouseholdRepository(String householdId){

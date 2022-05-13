@@ -77,14 +77,14 @@ public class HistoryFragment extends Fragment {
     }
 
     private void initUserInfoAndHousehold(){
-        viewModel.initUserInfoRepository();
+        //viewModel.initUserInfoRepository();
         viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
             if (userInfo != null) {
                 userHouseholdId = userInfo.getHouseholdId();
                 userName = userInfo.getName();
                 userPhone = userInfo.getPhone();
 
-                viewModel.initHouseholdRepository(userHouseholdId);
+                //viewModel.initHouseholdRepository(userHouseholdId);
 
                 observeHousehold();
             }

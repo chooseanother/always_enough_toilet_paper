@@ -99,7 +99,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void initUserInfo(){
-        viewModel.init();
+        //viewModel.init();
         viewModel.getCurrentUserInfo().observe(getViewLifecycleOwner(), userInfo -> {
             if (userInfo != null) {
                 householdCode = userInfo.getHouseholdId();
@@ -107,7 +107,7 @@ public class SettingsFragment extends Fragment {
                 userPhone = userInfo.getPhone();
 
 
-                viewModel.initHouseHoldRepository(householdCode);
+                //viewModel.initHouseHoldRepository(householdCode);
 
                 //set up values in the fragment
                 TextView householdCodeTV = binding.settingsHouseholdCode;

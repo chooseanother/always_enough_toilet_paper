@@ -3,6 +3,7 @@ package com.example.alwaysenoughtoiletpaper;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
+        checkIfSignedIn();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -53,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
 
-        checkIfSignedIn();
+
+
         bindLogOutMenu();
     }
 
@@ -83,6 +86,14 @@ public class MainActivity extends AppCompatActivity {
                     if (userInfo == null){
                         String name = currentUser.getValue().getDisplayName();
                         viewModel.saveUserInfo(name, "", "");
+                    }
+                    String householdId = userInfo.getHouseholdId();
+                    Log.d("testShopUserInfoObserve","householdid "+householdId);
+                    if (householdId != null){
+                        if (!householdId.equals("")){
+                            viewModel.initHouseholdRepository(householdId);
+                            Log.d("testShopHouse","initialized");
+                        }
                     }
                 });
             } else {
