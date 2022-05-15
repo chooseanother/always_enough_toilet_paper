@@ -35,3 +35,4 @@ The purpose of this application is to make it easier for people who live in a sh
 - [ ] 28. As a household creator, I want to be able to remove other users from the household if the user moves out.
 
 # YouTube link
+[Application demonstration](https://www.youtube.com/watch?v=S-mbcxoQDX4)
