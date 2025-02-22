@@ -1,0 +1,10 @@
+Battery resource utilization
+https://support.google.com/pixelphone/answer/7015477
+On the battery usage page within system settings, a user can choose from the following options:
+Unrestricted: Allow all background work, which might consume more battery.
+Optimized (default): Optimize an app's ability to perform background work, based on how the user interacts with the app.
+Restricted: Fully prevents an app from running in the background. Apps might not work as expected.
+If a user places your app in the "restricted" state for background battery usage while your app targets Android 13 (API level 33), the system doesn't deliver the BOOT_COMPLETED broadcast or the LOCKED_BOOT_COMPLETED broadcast until the app is started for other reasons.
+
+For more information, read about user-initiated restrictions. 
+https://developer.android.com/topic/performance/background-optimization#bg-restrict
