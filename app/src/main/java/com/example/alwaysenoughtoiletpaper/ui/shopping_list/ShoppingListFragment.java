@@ -27,11 +27,15 @@ import com.example.alwaysenoughtoiletpaper.model.Household;
 import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.adapter.ShoppingItemAdapter;
+import com.example.alwaysenoughtoiletpaper.model.adapter.ItemSwipedListener;
+import com.example.alwaysenoughtoiletpaper.model.adapter.SimpleItemTouchHelperCallback;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShoppingListFragment extends Fragment {
+public class ShoppingListFragment extends Fragment implements ItemSwipedListener{
     private FragmentShoppingListBinding binding;
     private ShoppingListViewModel viewModel;
     private View root;
@@ -90,6 +94,9 @@ public class ShoppingListFragment extends Fragment {
 
         setupBoughtButton();
 
+        // Setup swipe gesture
+        setupSwipeGesture();
+
         return root;
     }
 
@@ -112,7 +119,7 @@ public class ShoppingListFragment extends Fragment {
     }
 
     private void setupAdapter() {
-        shoppingItemAdapter = new ShoppingItemAdapter(new ArrayList<>());
+        shoppingItemAdapter = new ShoppingItemAdapter(new ArrayList<>(),this);
         shoppingItemAdapter.setOnClickListener(((item, delete, index, isChecked) -> {
             if (delete) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -172,6 +179,12 @@ public class ShoppingListFragment extends Fragment {
         });
     }
 
+    private void setupSwipeGesture() {
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(shoppingItemAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(shoppingList);
+    }
+
     private void observeChanges() {
         if (userHouseholdId == null){
 
@@ -199,6 +212,27 @@ public class ShoppingListFragment extends Fragment {
                 });
             }
         }
+    }
+
+    @Override
+    public void itemSwipedRight(String item) {
+        Toast.makeText(getContext(), "Bought: " + item, Toast.LENGTH_SHORT).show();
+        householdHistoryItemList.add(new HistoryItem(userName, item));
+        Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, householdHistoryItemList);
+        viewModel.updateHousehold(household);
+    }
+
+    @Override
+    public void itemSwipedLeft(String item) {
+        Toast.makeText(getContext(), "Removed: " + item, Toast.LENGTH_SHORT).show();
+        Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, householdHistoryItemList);
+        viewModel.updateHousehold(household);
+    }
+
+    @Override
+    public void itemMoved(){
+        Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, householdHistoryItemList);
+        viewModel.updateHousehold(household);
     }
 }
 

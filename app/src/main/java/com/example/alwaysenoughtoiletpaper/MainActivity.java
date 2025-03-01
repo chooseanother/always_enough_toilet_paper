@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("testShop","onCreate");
         viewModel = new ViewModelProvider(this).get(MainActivityViewModel.class);
         checkIfSignedIn();
 
@@ -77,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkIfSignedIn(){
+
         LiveData<FirebaseUser> currentUser = viewModel.getCurrentUser();
         currentUser.observe(this, user -> {
             if (user != null){
