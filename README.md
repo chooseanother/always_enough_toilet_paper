@@ -36,3 +36,32 @@ The purpose of this application is to make it easier for people who live in a sh
 
 # YouTube link
 [Application demonstration](https://www.youtube.com/watch?v=S-mbcxoQDX4)
+
+# Issues with dependencies version
+
+Firebase Auth, Failed resolution of: Lcom/google/android/gms/auth/api/credentials/CredentialsOptions$Builder
+
+https://stackoverflow.com/questions/78103881/firebase-auth-failed-resolution-of-lcom-google-android-gms-auth-api-credential
+
+UPDATE:
+
+Changing
+
+implementation("com.google.android.gms:play-services-auth:21.0.0")
+
+to
+
+implementation("com.google.android.gms:play-services-auth:20.5.0")
+
+fixed the error. does anyone know why?
+
+
+# Setup development in new IDE
+
+Get SHA-1 key and add it to firebase
+
+In the Gradel sidebar
+
+run gradle signingReport
+
+https://stackoverflow.com/questions/39144629/how-to-add-sha-1-to-android-application

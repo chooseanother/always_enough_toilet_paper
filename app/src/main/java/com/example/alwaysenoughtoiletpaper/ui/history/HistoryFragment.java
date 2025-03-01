@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,11 +23,15 @@ import com.example.alwaysenoughtoiletpaper.model.HouseholdMember;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 import com.example.alwaysenoughtoiletpaper.model.adapter.HistoryAdapter;
 import com.example.alwaysenoughtoiletpaper.JoinCreateHouseholdActivity;
+import com.example.alwaysenoughtoiletpaper.model.adapter.ItemSwipedListener;
+import com.example.alwaysenoughtoiletpaper.model.adapter.SimpleItemTouchHelperCallback;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends Fragment implements ItemSwipedListener {
 
     private View root;
     private FragmentHistoryBinding binding;
@@ -58,7 +63,7 @@ public class HistoryFragment extends Fragment {
         historyList.setLayoutManager(new LinearLayoutManager(root.getContext()));
 
         // Setup adapter
-        historyAdapter = new HistoryAdapter(new ArrayList<>());
+        historyAdapter = new HistoryAdapter(new ArrayList<>(), this);
         historyList.setAdapter(historyAdapter);
 
         // Setup fab
@@ -66,6 +71,8 @@ public class HistoryFragment extends Fragment {
 
         initUserInfoAndHousehold();
 
+        // Setup swipe gesture
+        setupSwipeGesture();
 
         return root;
     }
@@ -115,6 +122,12 @@ public class HistoryFragment extends Fragment {
         }
     }
 
+    private void setupSwipeGesture() {
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(historyAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(historyList);
+    }
+
     private void setupDeleteFab() {
         binding.historyFab.setOnClickListener(view -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -147,5 +160,27 @@ public class HistoryFragment extends Fragment {
             AlertDialog dialog = builder.create();
             dialog.show();
         });
+    }
+
+    @Override
+    public void itemSwipedRight(String item) {
+        Toast.makeText(getContext(), "Removed: " + item, Toast.LENGTH_SHORT).show();
+        Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, householdHistoryItemList);
+        viewModel.saveHousehold(household);
+    }
+
+    @Override
+    public void itemSwipedLeft(String item) {
+        Toast.makeText(getContext(), "Removed: " + item, Toast.LENGTH_SHORT).show();
+        //historyItems.remove(position);
+        //notifyItemRemoved(position);
+        Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, householdHistoryItemList);
+        viewModel.saveHousehold(household);
+    }
+
+    @Override
+    public void itemMoved(){
+        Household household = new Household(householdName, householdCreator, householdMemberList, householdShoppingItemList, householdHistoryItemList);
+        viewModel.saveHousehold(household);
     }
 }

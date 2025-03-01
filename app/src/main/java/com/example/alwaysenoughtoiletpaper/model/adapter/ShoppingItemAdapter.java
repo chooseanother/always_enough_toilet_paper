@@ -8,18 +8,23 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 import com.example.alwaysenoughtoiletpaper.R;
+import com.example.alwaysenoughtoiletpaper.model.HistoryItem;
 import com.example.alwaysenoughtoiletpaper.model.ShoppingItem;
 
+import java.util.Collections;
 import java.util.List;
 
-public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapter.ViewHolder> {
+public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapter.ViewHolder> implements ItemTouchHelperAdapter {
     private List<ShoppingItem> shoppingItemList;
     private OnClickListener listener;
+    private final ItemSwipedListener swipeListener;
 
-    public ShoppingItemAdapter(List<ShoppingItem> shoppingItemList){
+    public ShoppingItemAdapter(List<ShoppingItem> shoppingItemList, ItemSwipedListener swipeListener) {
         this.shoppingItemList = shoppingItemList;
+        this.swipeListener = swipeListener;
     }
 
     @NonNull
@@ -70,5 +75,41 @@ public class ShoppingItemAdapter extends RecyclerView.Adapter<ShoppingItemAdapte
 
     public interface OnClickListener {
         void OnClick(ShoppingItem item, boolean delete, int index, boolean isChecked);
+    }
+
+    @Override
+    public void onItemSwiped(int position, int direction) {
+        if (ItemTouchHelper.LEFT == direction) {
+            ShoppingItem removedItem = shoppingItemList.get(position);
+            shoppingItemList.remove(position);
+            notifyItemRemoved(position);
+            if (swipeListener != null) {
+                swipeListener.itemSwipedLeft(removedItem.getName()); // Notify the listener
+            }
+        }
+        else if (ItemTouchHelper.RIGHT == direction) {
+            ShoppingItem removedItem = shoppingItemList.get(position);
+            shoppingItemList.remove(position);
+            notifyItemRemoved(position);
+            if (swipeListener != null) {
+                swipeListener.itemSwipedRight(removedItem.getName()); // Notify the listener
+            }
+        }
+    }
+
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(shoppingItemList, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(shoppingItemList, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+        swipeListener.itemMoved();
+        return true;
     }
 }
