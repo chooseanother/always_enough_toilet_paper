@@ -65,3 +65,7 @@ In the Gradel sidebar
 run gradle signingReport
 
 https://stackoverflow.com/questions/39144629/how-to-add-sha-1-to-android-application
+
+# Drag an drop
+
+Drag and drop to rearagne is diabled, need to refactor it so that the databse doesn't get updated until the item gets dropped and not on each switch of two items when dragging. When database gets updated on each switch the drag is stopped because the list of items gets updated.
